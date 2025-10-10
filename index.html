@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SUPER BARREIRAS</title>
-<p class="subtitle">Análise de Operações</p>
+<p class="subtitle">Análise de operações</p>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
   :root{
@@ -12,9 +12,9 @@
     --bb-blue:#003399;
     --ink:#0c1424;
     --muted:#6b7280;
-    --bg:#f3f6ff;           /* leve azulado */
-    --bg-accent:#fff7d1;    /* amarelo claro */
-    --bg-accent-2:#e8f7ff;  /* azul clarinho */
+    --bg:#f3f6ff;           
+    --bg-accent:#fff7d1;    
+    --bg-accent-2:#e8f7ff;  
     --card:#ffffff;
     --radius:12px;
   }
@@ -147,7 +147,7 @@
         <input id="rating" type="text" placeholder="">
         <div class="print-value" data-from="rating"></div>
       </div>
-      <div class="subtitle-sep">--------------------------------------</div>
+      <div class="subtitle-sep">----------------------------------------------------------------------------------------------------------------------------------->
 
       <div class="field">
         <label for="autorizacao-grao">Autorização Grão</label>
@@ -229,7 +229,7 @@
         <input id="garantias" type="text" placeholder="">
         <div class="print-value" data-from="garantias"></div>
       </div>
-      <div class="subtitle-sep">--------------------------------------</div>
+      <div class="subtitle-sep">-----------------------------------------------------------------------------------------------------------------------------------</div>
 
       <div class="field">
         <label for="share-bb-preenchimento-automatico">Share BB ( preenchimento automático) (%) = Endiv. BB ÷ Endiv. SFN</label>
@@ -295,6 +295,8 @@
         <div class="print-value" data-from="rende-facil"></div>
       </div>
     </div>
+    <div class="legend">
+      <b>Exporte e nos envie a imagem para que sua operação seja votada</b><br>
     </div>
   </div>
   <footer>Use <strong>Salvar em imagem</strong> para exportar o painel completo.</footer>
@@ -313,9 +315,10 @@
     return isNaN(n) ? 0 : n;
   }
   function setPrintMirror(id, text){
-    const span = document.querySelector(`.print-value[data-from="\${id}"]`);
+    const span = document.querySelector(`.print-value[data-from="${id}"]`);
     if(span){ span.textContent = text || ''; }
   }
+
   function handleMoneyInput(e){
     const el = e.target;
     const raw = toNumberBR(el.value);
@@ -333,32 +336,61 @@
   }
   function bindMirror(el){ el.addEventListener('input', ()=> setPrintMirror(el.id, el.value || '')); }
 
+  // Mirror helpers for export
+  function syncAllToPrint(){
+    // Money
+    document.querySelectorAll('input.money').forEach(el=>{
+      let raw = el.dataset.raw;
+      if(raw === undefined || raw === ""){
+        raw = toNumberBR(el.value);
+        el.dataset.raw = raw;
+      }
+      setPrintMirror(el.id, fmtBRL.format(parseFloat(raw||0)));
+    });
+    // Percent (editable)
+    document.querySelectorAll('input.percent:not([readonly])').forEach(el=>{
+      let rp = el.dataset.rawpct;
+      if(rp === undefined || rp === ""){
+        rp = toNumberBR(el.value)/100.0;
+        el.dataset.rawpct = rp;
+      }
+      setPrintMirror(el.id, fmtPct.format(parseFloat(rp||0)));
+    });
+    // Percent readonly (Share)
+    document.querySelectorAll('input.percent[readonly]').forEach(el=>{
+      setPrintMirror(el.id, el.value || "0,00%");
+    });
+    // Date
+    document.querySelectorAll('input[type="date"]').forEach(el=>{
+      if(el.value){
+        const d = new Date(el.value);
+        const txt = d.toLocaleDateString('pt-BR', { timeZone:'UTC' });
+        setPrintMirror(el.id, txt);
+      }else{
+        setPrintMirror(el.id, "");
+      }
+    });
+    // Text + Textarea
+    document.querySelectorAll('textarea, input[type="text"]:not(.money):not(.percent)').forEach(el=>{
+      setPrintMirror(el.id, el.value || '');
+    });
+    // Selects
+    document.querySelectorAll('select').forEach(el=>{
+      setPrintMirror(el.id, el.value || '');
+    });
+    // Recompute Share at the end to ensure latest mirroring
+    updateShare();
+  }
+
+  // Event wiring
   document.querySelectorAll('input.money').forEach(el=>{
     el.addEventListener('input', handleMoneyInput);
-    el.dataset.raw = 0;
-    setPrintMirror(el.id, fmtBRL.format(0));
-    el.addEventListener('blur', ()=>{
-      const raw = parseFloat(el.dataset.raw || 0);
-      el.value = raw ? fmtBRL.format(raw) : '';
-    });
-    el.addEventListener('focus', ()=>{
-      const raw = el.dataset.raw || '';
-      el.value = raw ? String(raw).replace('.', ',') : '';
-    });
+    el.dataset.raw = el.dataset.raw || 0;
   });
   document.querySelectorAll('input.percent').forEach(el=>{
     if(!el.readOnly){
       el.addEventListener('input', handlePercentInput);
-      el.dataset.rawpct = 0;
-      setPrintMirror(el.id, fmtPct.format(0));
-      el.addEventListener('blur', ()=>{
-        const raw = parseFloat(el.dataset.rawpct || 0);
-        el.value = fmtPct.format(raw);
-      });
-      el.addEventListener('focus', ()=>{
-        const raw = el.dataset.rawpct || '0';
-        el.value = String(parseFloat(raw)*100).replace('.', ',');
-      });
+      el.dataset.rawpct = el.dataset.rawpct || 0;
     }
   });
   document.querySelectorAll('textarea').forEach(bindMirror);
@@ -366,7 +398,6 @@
   document.querySelectorAll('input[type="date"]').forEach(bindMirror);
   document.querySelectorAll('select').forEach(el=>{
     el.addEventListener('change', ()=> setPrintMirror(el.id, el.value || ''));
-    setPrintMirror(el.id, '');
   });
 
   const idEndivSfn = 'endividamento-no-sfn';
@@ -394,22 +425,10 @@
 
   document.getElementById('savePng').addEventListener('click', async ()=>{
     const wasPrint = document.body.classList.contains('print-mode');
-    document.body.classList.add('ultra'); // 3 colunas e super compacto
+    document.body.classList.add('ultra'); // super compacto e 3 colunas
+    // Sync all fields BEFORE hiding inputs
+    syncAllToPrint();
     if(!wasPrint) document.body.classList.add('print-mode');
-    document.querySelectorAll('input.money').forEach(el=>{
-      const raw = parseFloat(el.dataset.raw || 0);
-      setPrintMirror(el.id, fmtBRL.format(raw));
-    });
-    document.querySelectorAll('input.percent').forEach(el=>{
-      if(!el.readOnly){
-        const raw = parseFloat(el.dataset.rawpct || 0);
-        setPrintMirror(el.id, fmtPct.format(raw));
-      }
-    });
-    document.querySelectorAll('textarea, input[type="text"]:not(.money):not(.percent), input[type="date"]').forEach(el=>{
-      setPrintMirror(el.id, el.value || '');
-    });
-    updateShare();
     const node = document.querySelector('#capture');
     const scale = window.devicePixelRatio > 1 ? 2 : 1;
     const canvas = await html2canvas(node, {backgroundColor:'#ffffff', scale});
@@ -421,6 +440,7 @@
     document.body.classList.remove('ultra');
   });
 
+  // Initialize computed Share on load
   updateShare();
 </script>
 </body>
