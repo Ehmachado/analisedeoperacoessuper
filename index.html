@@ -45,6 +45,14 @@
   .kpi{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
   .pill{padding:10px 12px;border-radius:999px;font-weight:700;background:#eef2ff;border:1px dashed #c7d2fe;color:#1e40af;font-size:13px;}
 
+  .subtitle-sep{
+    grid-column:1 / -1;
+    margin:4px 0 0 0;
+    padding:8px 12px;
+    background:#fff3b0;border:1px solid #f3c300;border-radius:12px;
+    font-weight:800;color:#1f2937;font-size:14px;
+  }
+
   .legend{margin-top:12px;font-size:12px;color:#374151;background:#fff8db;border:1px solid #f3c300;padding:10px 12px;border-radius:12px;}
   .legend b{color:#1f2937}
 
@@ -53,8 +61,17 @@
   .print-mode .field .print-value{display:block;}
 
   #capture{border:3px solid var(--bb-blue);border-radius:22px;padding:18px;background:linear-gradient(180deg,#fff,#fbfcff);box-shadow:0 10px 30px rgba(0,35,90,.12) inset;}
-  footer{margin:18px 0;color:#6b7280;font-size:12px;text-align:center;}
-  a{color:var(--bb-blue)}
+
+  .compact #capture{max-width:794px;margin:0 auto;}
+  .compact .grid{gap:8px;}
+  .compact .field{padding:8px;border-radius:10px;}
+  .compact .field label{font-size:12px;}
+  .compact input, .compact select, .compact textarea{padding:8px 10px;font-size:13px;border-radius:10px;}
+  .compact h1{font-size:20px;}
+  .compact .titlecard{padding:10px 12px;border-radius:12px;}
+  .compact .pill{padding:6px 8px;font-size:11px;}
+  .compact .print-value{padding:8px 10px;font-size:13px;}
+  .compact .subtitle-sep{padding:6px 10px;font-size:12px;border-radius:10px;}
 </style>
 </head>
 <body>
@@ -159,9 +176,7 @@
         <div class="print-value" data-from="condicionante-do-lc-qual"></div>
       </div>
 
-      <div class="field">
-        <label for="receita-bruta-clientes-03-20-41-selecionar-lc-f12-6-f9">Receita bruta - Clientes 03-20-41 Selecionar LC, F12-6-F9
-      </div>
+      <div class="subtitle-sep">RECEITA BRUTA - CLIENTES 03-20-41 SELECIONAR LC, F12-6-F9</div>
 
       <div class="field">
         <label for="receita-bruta-total-obtida">Receita Bruta Total Obtida (R$)</label>
@@ -193,6 +208,7 @@
           <option value="" selected disabled>Selecione</option>
           <option>Sim</option>
           <option>Não</option>
+          <option>Não se aplica</option>
         </select>
         <div class="print-value" data-from="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho"></div>
         <label for="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-justificativa">Justifique</label>
@@ -210,7 +226,6 @@
         <label for="share-bb-preenchimento-automatico">Share BB ( preenchimento automático) (%) = Endiv. BB ÷ Endiv. SFN</label>
         <input id="share-bb-preenchimento-automatico" class="percent" type="text" readonly placeholder="0,00%">
         <div class="print-value" data-from="share-bb-preenchimento-automatico"></div>
-        <div class="hint">Atualiza automaticamente conforme os valores de endividamento.</div>
       </div>
 
       <div class="field">
@@ -249,6 +264,7 @@
           <option value="" selected disabled>Selecione</option>
           <option>Sim</option>
           <option>Não</option>
+          <option>Não se aplica</option>
         </select>
         <div class="print-value" data-from="proposta-customizada"></div>
       </div>
@@ -265,6 +281,7 @@
           <option value="" selected disabled>Selecione</option>
           <option>Sim</option>
           <option>Não</option>
+          <option>Não se aplica</option>
         </select>
         <div class="print-value" data-from="rende-facil"></div>
       </div>
@@ -343,7 +360,6 @@
     setPrintMirror(el.id, '');
   });
 
-  // Share calc
   const idEndivSfn = 'endividamento-no-sfn';
   const idEndivBb  = 'endividamento-no-bb';
   const idShare    = 'share-bb-preenchimento-automatico';
@@ -361,14 +377,15 @@
     setPrintMirror(idShare, text);
   }
 
-  // Print toggle and PNG export
   const toggleBtn = document.getElementById('togglePrint');
   toggleBtn.addEventListener('click', ()=>{
     document.body.classList.toggle('print-mode');
     toggleBtn.textContent = document.body.classList.contains('print-mode') ? 'Sair da pré-visualização' : 'Pré-visualizar impressão';
   });
+
   document.getElementById('savePng').addEventListener('click', async ()=>{
     const wasPrint = document.body.classList.contains('print-mode');
+    document.body.classList.add('compact');
     if(!wasPrint) document.body.classList.add('print-mode');
     document.querySelectorAll('input.money').forEach(el=>{
       const raw = parseFloat(el.dataset.raw || 0);
@@ -388,10 +405,11 @@
     const scale = window.devicePixelRatio > 1 ? 2 : 1;
     const canvas = await html2canvas(node, {backgroundColor:'#ffffff', scale});
     const link = document.createElement('a');
-    link.download = 'super-barreiras-analise.png';
+    link.download = 'super-barreiras-analise-a4-compact.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
     if(!wasPrint) document.body.classList.remove('print-mode');
+    document.body.classList.remove('compact');
   });
 
   updateShare();
