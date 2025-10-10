@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SUPER BARREIRAS — Análise de Operações</title>
+<title>SUPER BARREIRAS</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
   :root{
@@ -23,15 +23,15 @@
     border:2px solid #f3c300;color:#0b0b0b;border-radius:var(--radius);
     padding:18px 20px;display:flex;justify-content:space-between;align-items:center;
     box-shadow:0 8px 24px rgba(0,0,0,.06);
+    margin-bottom:12px;
   }
   h1{font-size:clamp(22px,2.6vw,32px);margin:0 0 2px 0;letter-spacing:.2px;}
-  .subtitle{margin:0;font-weight:600;color:#1f2937}
   .actions{display:flex;gap:10px;flex-wrap:wrap}
   button,.ghost{border:none;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer;}
   .primary{background:var(--bb-blue);color:#fff;box-shadow:0 6px 18px rgba(0,51,153,.25)}
   .ghost{background:rgba(0,0,0,.06);color:#111;}
 
-  .card{margin-top:16px;background:var(--card);border-radius:var(--radius);padding:18px;border:1px solid #e6e8ef;box-shadow:0 6px 18px rgba(0,0,0,.04);}
+  .card{margin-top:0;background:var(--card);border-radius:var(--radius);padding:18px;border:1px solid #e6e8ef;box-shadow:0 6px 18px rgba(0,0,0,.04);}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
   .field{display:flex;flex-direction:column;gap:8px;background:#fafbff;border:1px solid #eef0f6;border-radius:14px;padding:12px 12px;}
@@ -45,6 +45,9 @@
   .kpi{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
   .pill{padding:10px 12px;border-radius:999px;font-weight:700;background:#eef2ff;border:1px dashed #c7d2fe;color:#1e40af;font-size:13px;}
 
+  .legend{margin-top:12px;font-size:12px;color:#374151;background:#fff8db;border:1px solid #f3c300;padding:10px 12px;border-radius:12px;}
+  .legend b{color:#1f2937}
+
   .print-value{display:none;font-weight:700;font-size:15px;color:#0f172a;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 12px;}
   .print-mode .field input,.print-mode .field select,.print-mode .field textarea{display:none;}
   .print-mode .field .print-value{display:block;}
@@ -56,17 +59,14 @@
 </head>
 <body>
 <div class="page">
-  <div class="titlecard">
-    <div>
-      <h1>SUPER BARREIRAS</h1>
-      <p class="subtitle">Análise de Operações</p>
-    </div>
-    <div class="actions">
-      <button class="ghost" id="togglePrint">Pré-visualizar impressão</button>
-      <button class="primary" id="savePng">Salvar em imagem (PNG)</button>
-    </div>
-  </div>
   <div id="capture" class="card">
+    <div class="titlecard">
+      <h1>SUPER BARREIRAS</h1>
+      <div class="actions">
+        <button class="ghost" id="togglePrint">Pré-visualizar impressão</button>
+        <button class="primary" id="savePng">Salvar em imagem (PNG)</button>
+      </div>
+    </div>
     <div class="grid">
 
       <div class="field">
@@ -271,13 +271,9 @@
         <div class="print-value" data-from="rende-facil"></div>
       </div>
     </div>
-    <div class="kpi">
-      <div class="pill">Campos monetários em <strong>R$ (BRL)</strong></div>
-      <div class="pill">Share BB em <strong>%</strong></div>
-      <div class="pill">Exporta para <strong>PNG</strong> em uma página</div>
     </div>
   </div>
-  <footer>© Super Barreiras</footer>
+  <footer>Use <strong>Salvar em imagem</strong> para exportar o painel completo.</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
@@ -311,13 +307,8 @@
     const pretty = fmtPct.format(raw);
     setPrintMirror(el.id, pretty);
   }
+  function bindMirror(el){ el.addEventListener('input', ()=> setPrintMirror(el.id, el.value || '')); }
 
-  // Attach mirrors
-  function bindMirror(el){
-    el.addEventListener('input', ()=> setPrintMirror(el.id, el.value || ''));
-  }
-
-  // Money fields
   document.querySelectorAll('input.money').forEach(el=>{
     el.addEventListener('input', handleMoneyInput);
     el.dataset.raw = 0;
@@ -331,8 +322,6 @@
       el.value = raw ? String(raw).replace('.', ',') : '';
     });
   });
-
-  // Percent editable
   document.querySelectorAll('input.percent').forEach(el=>{
     if(!el.readOnly){
       el.addEventListener('input', handlePercentInput);
@@ -348,8 +337,6 @@
       });
     }
   });
-
-  // Text, textarea, date
   document.querySelectorAll('textarea').forEach(bindMirror);
   document.querySelectorAll('input[type="text"]:not(.money):not(.percent)').forEach(bindMirror);
   document.querySelectorAll('input[type="date"]').forEach(bindMirror);
@@ -358,11 +345,10 @@
     setPrintMirror(el.id, '');
   });
 
-  // Share auto calc
+  // Share calc
   const idEndivSfn = 'endividamento-no-sfn';
   const idEndivBb  = 'endividamento-no-bb';
   const idShare    = 'share-bb-preenchimento-automatico';
-
   function updateShare(){
     if(!idEndivSfn || !idEndivBb || !idShare) return;
     const sfnEl = document.getElementById(idEndivSfn);
@@ -377,12 +363,12 @@
     setPrintMirror(idShare, text);
   }
 
+  // Print toggle and PNG export
   const toggleBtn = document.getElementById('togglePrint');
   toggleBtn.addEventListener('click', ()=>{
     document.body.classList.toggle('print-mode');
     toggleBtn.textContent = document.body.classList.contains('print-mode') ? 'Sair da pré-visualização' : 'Pré-visualizar impressão';
   });
-
   document.getElementById('savePng').addEventListener('click', async ()=>{
     const wasPrint = document.body.classList.contains('print-mode');
     if(!wasPrint) document.body.classList.add('print-mode');
@@ -404,7 +390,7 @@
     const scale = window.devicePixelRatio > 1 ? 2 : 1;
     const canvas = await html2canvas(node, {backgroundColor:'#ffffff', scale});
     const link = document.createElement('a');
-    link.download = 'analise-operacoes-super.png';
+    link.download = 'super-barreiras-analise.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
     if(!wasPrint) document.body.classList.remove('print-mode');
