@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SUPER BARREIRAS — Análise de Operações</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<style>
+  :root{
+    --bb-yellow:#FFCC00;
+    --bb-blue:#003399;
+    --ink:#0f172a;
+    --muted:#6b7280;
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .page{max-width:1100px;margin:24px auto 56px;padding:0 16px;}
+  .titlecard{
+    background:linear-gradient(135deg,var(--bb-yellow),#ffd84d);
+    border:2px solid #f3c300;color:#0b0b0b;border-radius:var(--radius);
+    padding:18px 20px;display:flex;justify-content:space-between;align-items:center;
+    box-shadow:0 8px 24px rgba(0,0,0,.06);
+  }
+  h1{font-size:clamp(22px,2.6vw,32px);margin:0 0 2px 0;letter-spacing:.2px;}
+  .subtitle{margin:0;font-weight:600;color:#1f2937}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  button,.ghost{border:none;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer;}
+  .primary{background:var(--bb-blue);color:#fff;box-shadow:0 6px 18px rgba(0,51,153,.25)}
+  .ghost{background:rgba(0,0,0,.06);color:#111;}
+
+  .card{margin-top:16px;background:var(--card);border-radius:var(--radius);padding:18px;border:1px solid #e6e8ef;box-shadow:0 6px 18px rgba(0,0,0,.04);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
+  .field{display:flex;flex-direction:column;gap:8px;background:#fafbff;border:1px solid #eef0f6;border-radius:14px;padding:12px 12px;}
+  .field label{font-size:13px;color:#334155;font-weight:700;}
+  input[type="text"].money,input[type="text"].percent,input[type="text"].ro,select,textarea,input[type="date"],input[type="text"]{
+    width:100%;padding:12px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;font-size:15px;font-weight:600;color:#0f172a;
+  }
+  textarea{min-height:84px;resize:vertical;font-weight:500}
+  input[readonly]{background:#f7f7fb;}
+  .hint{font-size:11px;color:var(--muted)}
+  .kpi{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+  .pill{padding:10px 12px;border-radius:999px;font-weight:700;background:#eef2ff;border:1px dashed #c7d2fe;color:#1e40af;font-size:13px;}
+
+  .print-value{display:none;font-weight:700;font-size:15px;color:#0f172a;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 12px;}
+  .print-mode .field input,.print-mode .field select,.print-mode .field textarea{display:none;}
+  .print-mode .field .print-value{display:block;}
+
+  #capture{border:3px solid var(--bb-blue);border-radius:22px;padding:18px;background:linear-gradient(180deg,#fff,#fbfcff);box-shadow:0 10px 30px rgba(0,35,90,.12) inset;}
+  footer{margin:18px 0;color:#6b7280;font-size:12px;text-align:center;}
+  a{color:var(--bb-blue)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="titlecard">
+    <div>
+      <h1>SUPER BARREIRAS</h1>
+      <p class="subtitle">Análise de Operações</p>
+    </div>
+    <div class="actions">
+      <button class="ghost" id="togglePrint">Pré-visualizar impressão</button>
+      <button class="primary" id="savePng">Salvar em imagem (PNG)</button>
+    </div>
+  </div>
+  <div id="capture" class="card">
+    <div class="grid">
+
+      <div class="field">
+        <label for="alcada">Alçada</label>
+        <input id="alcada" type="text" placeholder="">
+        <div class="print-value" data-from="alcada"></div>
+      </div>
+
+      <div class="field">
+        <label for="mci">MCI</label>
+        <input id="mci" type="text" placeholder="">
+        <div class="print-value" data-from="mci"></div>
+      </div>
+
+      <div class="field">
+        <label for="cliente">Cliente</label>
+        <input id="cliente" type="text" placeholder="">
+        <div class="print-value" data-from="cliente"></div>
+      </div>
+
+      <div class="field">
+        <label for="idade-do-cliente">Idade do Cliente</label>
+        <input id="idade-do-cliente" type="text" placeholder="">
+        <div class="print-value" data-from="idade-do-cliente"></div>
+      </div>
+
+      <div class="field">
+        <label for="cliente-desde">Cliente desde (Data)</label>
+        <input id="cliente-desde" type="date">
+        <div class="print-value" data-from="cliente-desde"></div>
+      </div>
+
+      <div class="field">
+        <label for="proposta">Proposta</label>
+        <input id="proposta" type="text" placeholder="">
+        <div class="print-value" data-from="proposta"></div>
+      </div>
+
+      <div class="field">
+        <label for="linha-de-credito">Linha de Crédito</label>
+        <input id="linha-de-credito" type="text" placeholder="">
+        <div class="print-value" data-from="linha-de-credito"></div>
+      </div>
+
+      <div class="field">
+        <label for="item-financiado">Item Financiado</label>
+        <input id="item-financiado" type="text" placeholder="">
+        <div class="print-value" data-from="item-financiado"></div>
+      </div>
+
+      <div class="field">
+        <label for="rating">Rating</label>
+        <input id="rating" type="text" placeholder="">
+        <div class="print-value" data-from="rating"></div>
+      </div>
+
+      <div class="field">
+        <label for="autorizacao-grao">Autorização Grão</label>
+        <textarea id="autorizacao-grao" placeholder=""></textarea>
+        <div class="print-value" data-from="autorizacao-grao"></div>
+      </div>
+
+      <div class="field">
+        <label for="valor-operacao">Valor Operação (R$)</label>
+        <input id="valor-operacao" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="valor-operacao"></div>
+      </div>
+
+      <div class="field">
+        <label for="seguros-quais">Seguros (Quais?)</label>
+        <input id="seguros-quais" type="text" placeholder="">
+        <div class="print-value" data-from="seguros-quais"></div>
+      </div>
+
+      <div class="field">
+        <label for="rs-contratado-na-operacao">RS contratado na operação (R$)</label>
+        <input id="rs-contratado-na-operacao" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="rs-contratado-na-operacao"></div>
+      </div>
+
+      <div class="field">
+        <label for="limite-de-credito-vigencia-e-risco">Limite de Crédito (Vigência e Risco)</label>
+        <input id="limite-de-credito-vigencia-e-risco" type="text" placeholder="">
+        <div class="print-value" data-from="limite-de-credito-vigencia-e-risco"></div>
+      </div>
+
+      <div class="field">
+        <label for="condicionante-do-lc-qual">Condicionante do LC (Qual?)</label>
+        <input id="condicionante-do-lc-qual" type="text" placeholder="">
+        <div class="print-value" data-from="condicionante-do-lc-qual"></div>
+      </div>
+
+      <div class="field">
+        <label for="receita-bruta-clientes-03-20-41-selecionar-lc-f12-6-f9">Receita bruta - Clientes 03-20-41 Selecionar LC, F12-6-F9 (R$)</label>
+        <input id="receita-bruta-clientes-03-20-41-selecionar-lc-f12-6-f9" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="receita-bruta-clientes-03-20-41-selecionar-lc-f12-6-f9"></div>
+      </div>
+
+      <div class="field">
+        <label for="receita-bruta-total-obtida">Receita Bruta Total Obtida (R$)</label>
+        <input id="receita-bruta-total-obtida" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="receita-bruta-total-obtida"></div>
+      </div>
+
+      <div class="field">
+        <label for="receita-bruta-total-prevista">Receita Bruta Total Prevista (R$)</label>
+        <input id="receita-bruta-total-prevista" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="receita-bruta-total-prevista"></div>
+      </div>
+
+      <div class="field">
+        <label for="resultado-operacional-agropecuario-obtido">Resultado Operacional Agropecuário Obtido (R$)</label>
+        <input id="resultado-operacional-agropecuario-obtido" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="resultado-operacional-agropecuario-obtido"></div>
+      </div>
+
+      <div class="field">
+        <label for="resultado-operacional-agropecuario-previsto">Resultado Operacional Agropecuário Previsto (R$)</label>
+        <input id="resultado-operacional-agropecuario-previsto" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="resultado-operacional-agropecuario-previsto"></div>
+      </div>
+
+      <div class="field">
+        <label for="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho">Pecuária: Quantidade de animais compatível com área do cliente? (Se não, justifique o apascentamento aqui e no despacho)</label>
+        <select id="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho">
+          <option value="" selected disabled>Selecione</option>
+          <option>Sim</option>
+          <option>Não</option>
+        </select>
+        <div class="print-value" data-from="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho"></div>
+        <label for="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-justificativa">Justifique</label>
+        <textarea id="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-justificativa" placeholder="Descreva a justificativa"></textarea>
+        <div class="print-value" data-from="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-justificativa"></div>
+      </div>
+
+      <div class="field">
+        <label for="garantias">Garantias</label>
+        <input id="garantias" type="text" placeholder="">
+        <div class="print-value" data-from="garantias"></div>
+      </div>
+
+      <div class="field">
+        <label for="share-bb-preenchimento-automatico">Share BB ( preenchimento automático) (%) = Endiv. BB ÷ Endiv. SFN</label>
+        <input id="share-bb-preenchimento-automatico" class="percent" type="text" readonly placeholder="0,00%">
+        <div class="print-value" data-from="share-bb-preenchimento-automatico"></div>
+        <div class="hint">Atualiza automaticamente conforme os valores de endividamento.</div>
+      </div>
+
+      <div class="field">
+        <label for="recursos-liquidos">Recursos liquidos (R$)</label>
+        <input id="recursos-liquidos" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="recursos-liquidos"></div>
+      </div>
+
+      <div class="field">
+        <label for="patrimonio-total">Patrimônio Total (R$)</label>
+        <input id="patrimonio-total" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="patrimonio-total"></div>
+      </div>
+
+      <div class="field">
+        <label for="endividamento-no-sfn">Endividamento no SFN (R$)</label>
+        <input id="endividamento-no-sfn" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="endividamento-no-sfn"></div>
+      </div>
+
+      <div class="field">
+        <label for="endividamento-no-bb">Endividamento no BB (R$)</label>
+        <input id="endividamento-no-bb" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="endividamento-no-bb"></div>
+      </div>
+
+      <div class="field">
+        <label for="inad-agro-agencia-rel-5398">Inad Agro Agência (rel 5398) (R$)</label>
+        <input id="inad-agro-agencia-rel-5398" class="money" type="text" inputmode="decimal" placeholder="0,00">
+        <div class="print-value" data-from="inad-agro-agencia-rel-5398"></div>
+      </div>
+
+      <div class="field">
+        <label for="proposta-customizada">Proposta Customizada</label>
+        <select id="proposta-customizada">
+          <option value="" selected disabled>Selecione</option>
+          <option>Sim</option>
+          <option>Não</option>
+        </select>
+        <div class="print-value" data-from="proposta-customizada"></div>
+      </div>
+
+      <div class="field">
+        <label for="de-operacoes-do-cliente-com-garantia-hipotecaria">% de operações do cliente Com garantia Hipotecária (%)</label>
+        <input id="de-operacoes-do-cliente-com-garantia-hipotecaria" class="percent" type="text" inputmode="decimal" placeholder="0,00%">
+        <div class="print-value" data-from="de-operacoes-do-cliente-com-garantia-hipotecaria"></div>
+      </div>
+
+      <div class="field">
+        <label for="rende-facil">Rende Fácil</label>
+        <select id="rende-facil">
+          <option value="" selected disabled>Selecione</option>
+          <option>Sim</option>
+          <option>Não</option>
+        </select>
+        <div class="print-value" data-from="rende-facil"></div>
+      </div>
+    </div>
+    <div class="kpi">
+      <div class="pill">Campos monetários em <strong>R$ (BRL)</strong></div>
+      <div class="pill">Share BB em <strong>%</strong></div>
+      <div class="pill">Exporta para <strong>PNG</strong> em uma página</div>
+    </div>
+  </div>
+  <footer>© Super Barreiras · Layout sem logo · “Salvar em imagem” para exportar.</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
+<script>
+  const fmtBRL = new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL', maximumFractionDigits:2 });
+  const fmtPct = new Intl.NumberFormat('pt-BR', { style:'percent', minimumFractionDigits:2, maximumFractionDigits:2 });
+
+  function toNumberBR(v){
+    if(!v) return 0;
+    v = String(v).replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3})/g,'');
+    v = v.replace(',', '.');
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+  }
+  function setPrintMirror(id, text){
+    const span = document.querySelector(`.print-value[data-from="${id}"]`);
+    if(span){ span.textContent = text || ''; }
+  }
+  function handleMoneyInput(e){
+    const el = e.target;
+    const raw = toNumberBR(el.value);
+    el.dataset.raw = raw;
+    const pretty = fmtBRL.format(raw);
+    setPrintMirror(el.id, pretty);
+    updateShare();
+  }
+  function handlePercentInput(e){
+    const el = e.target;
+    const raw = toNumberBR(el.value)/100.0;
+    el.dataset.rawpct = raw;
+    const pretty = fmtPct.format(raw);
+    setPrintMirror(el.id, pretty);
+  }
+
+  // Attach mirrors
+  function bindMirror(el){
+    el.addEventListener('input', ()=> setPrintMirror(el.id, el.value || ''));
+  }
+
+  // Money fields
+  document.querySelectorAll('input.money').forEach(el=>{
+    el.addEventListener('input', handleMoneyInput);
+    el.dataset.raw = 0;
+    setPrintMirror(el.id, fmtBRL.format(0));
+    el.addEventListener('blur', ()=>{
+      const raw = parseFloat(el.dataset.raw || 0);
+      el.value = raw ? fmtBRL.format(raw) : '';
+    });
+    el.addEventListener('focus', ()=>{
+      const raw = el.dataset.raw || '';
+      el.value = raw ? String(raw).replace('.', ',') : '';
+    });
+  });
+
+  // Percent editable
+  document.querySelectorAll('input.percent').forEach(el=>{
+    if(!el.readOnly){
+      el.addEventListener('input', handlePercentInput);
+      el.dataset.rawpct = 0;
+      setPrintMirror(el.id, fmtPct.format(0));
+      el.addEventListener('blur', ()=>{
+        const raw = parseFloat(el.dataset.rawpct || 0);
+        el.value = fmtPct.format(raw);
+      });
+      el.addEventListener('focus', ()=>{
+        const raw = el.dataset.rawpct || '0';
+        el.value = String(parseFloat(raw)*100).replace('.', ',');
+      });
+    }
+  });
+
+  // Text, textarea, date
+  document.querySelectorAll('textarea').forEach(bindMirror);
+  document.querySelectorAll('input[type="text"]:not(.money):not(.percent)').forEach(bindMirror);
+  document.querySelectorAll('input[type="date"]').forEach(bindMirror);
+  document.querySelectorAll('select').forEach(el=>{
+    el.addEventListener('change', ()=> setPrintMirror(el.id, el.value || ''));
+    setPrintMirror(el.id, '');
+  });
+
+  // Share auto calc
+  const idEndivSfn = 'endividamento-no-sfn';
+  const idEndivBb  = 'endividamento-no-bb';
+  const idShare    = 'share-bb-preenchimento-automatico';
+
+  function updateShare(){
+    if(!idEndivSfn || !idEndivBb || !idShare) return;
+    const sfnEl = document.getElementById(idEndivSfn);
+    const bbEl  = document.getElementById(idEndivBb);
+    const shareEl = document.getElementById(idShare);
+    if(!sfnEl || !bbEl || !shareEl) return;
+    const sfn = parseFloat(sfnEl.dataset.raw || 0);
+    const bb  = parseFloat(bbEl.dataset.raw  || 0);
+    const share = (sfn > 0) ? (bb/sfn) : 0;
+    const text = fmtPct.format(share);
+    shareEl.value = text;
+    setPrintMirror(idShare, text);
+  }
+
+  const toggleBtn = document.getElementById('togglePrint');
+  toggleBtn.addEventListener('click', ()=>{
+    document.body.classList.toggle('print-mode');
+    toggleBtn.textContent = document.body.classList.contains('print-mode') ? 'Sair da pré-visualização' : 'Pré-visualizar impressão';
+  });
+
+  document.getElementById('savePng').addEventListener('click', async ()=>{
+    const wasPrint = document.body.classList.contains('print-mode');
+    if(!wasPrint) document.body.classList.add('print-mode');
+    document.querySelectorAll('input.money').forEach(el=>{
+      const raw = parseFloat(el.dataset.raw || 0);
+      setPrintMirror(el.id, fmtBRL.format(raw));
+    });
+    document.querySelectorAll('input.percent').forEach(el=>{
+      if(!el.readOnly){
+        const raw = parseFloat(el.dataset.rawpct || 0);
+        setPrintMirror(el.id, fmtPct.format(raw));
+      }
+    });
+    document.querySelectorAll('textarea, input[type="text"]:not(.money):not(.percent), input[type="date"]').forEach(el=>{
+      setPrintMirror(el.id, el.value || '');
+    });
+    updateShare();
+    const node = document.querySelector('#capture');
+    const scale = window.devicePixelRatio > 1 ? 2 : 1;
+    const canvas = await html2canvas(node, {backgroundColor:'#ffffff', scale});
+    const link = document.createElement('a');
+    link.download = 'analise-operacoes-super.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    if(!wasPrint) document.body.classList.remove('print-mode');
+  });
+
+  updateShare();
+</script>
+</body>
+</html>
