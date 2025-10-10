@@ -150,6 +150,41 @@
   .ultra #capture{ background:#fff !important; box-shadow:none !important; border-color:#c9d4fb !important; }
   .ultra .subtitle-sep{ background:#fffdd0 !important; padding:3px 4px !important; font-size:9px !important; border-radius:4px !important; }
 
+
+  /* STRICT 3-COLS EXPORT:
+     - Prefixo & Agência centralizados no topo (2 blocos) 
+     - TODO o restante em 3 colunas fixas
+  */
+  .ultra #capture{max-width:1123px; width:1123px; margin:0 auto;}
+  /* Centraliza os dois campos do topo */
+  .ultra .topmeta{
+    display:grid !important;
+    grid-template-columns: 260px 260px !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    margin-bottom: 6px !important;
+  }
+  .ultra .topmeta .field{padding:4px !important;}
+  .ultra .topmeta .field label{font-size:11px !important;}
+  .ultra .topmeta input[type="text"]{font-size:13px !important; padding:4px 6px !important;}
+
+  /* Força exatamente 3 colunas para os demais campos */
+  .ultra .grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 2px !important;
+  }
+  /* Compactação razoável (já tínhamos ultra-max; aqui mantemos legibilidade) */
+  .ultra .field{padding:3px !important; border-radius:6px !important;}
+  .ultra .field label{font-size:10px !important; line-height:1.08;}
+  .ultra input, .ultra select, .ultra textarea{
+    padding:3px 4px !important; font-size:10px !important; border-radius:5px !important;
+  }
+  .ultra .print-value{padding:3px 4px !important; font-size:10px !important;}
+  .ultra .subtitle-sep{grid-column:1 / -1 !important; margin:2px 0 !important; padding:4px 6px !important; font-size:10px !important;}
+  .ultra h1{font-size:16px !important; margin:0 !important;}
+  .ultra .subtitle{font-size:11px !important; margin:0 !important;}
+  .ultra .titlecard{padding:6px 8px !important; border-radius:8px !important;}
+
 </style>
 </head>
 <body class="compact">
