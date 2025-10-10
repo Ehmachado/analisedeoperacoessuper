@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SUPER BARREIRAS</title>
-<p class="subtitle">Análise de operações</p>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
   :root{
@@ -12,21 +11,24 @@
     --bb-blue:#003399;
     --ink:#0c1424;
     --muted:#6b7280;
-    --bg:#f3f6ff;           
-    --bg-accent:#fff7d1;    
-    --bg-accent-2:#e8f7ff;  
+    --bg:#f3f6ff;
+    --bg-accent:#fff7d1;
+    --bg-accent-2:#e8f7ff;
     --card:#ffffff;
     --radius:12px;
+    --border:#dde3f3;
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:linear-gradient(180deg, var(--bg-accent-2), var(--bg));color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+
   .page{max-width:980px;margin:16px auto 32px;padding:0 10px;}
+  #capture{border:2px solid var(--bb-blue);border-radius:14px;padding:10px;background:linear-gradient(180deg,#fff,#f8fbff);box-shadow:0 8px 28px rgba(0,35,90,.12) inset;}
+
   .titlecard{
     background:linear-gradient(135deg,var(--bb-yellow),#ffe480);
     border:1px solid #f3c300;color:#0b0b0b;border-radius:var(--radius);
     padding:8px 10px;display:flex;justify-content:space-between;align-items:center;
-    box-shadow:0 6px 24px rgba(0,0,0,.08);
-    margin-bottom:6px;
+    box-shadow:0 6px 24px rgba(0,0,0,.08);margin-bottom:6px;
   }
   h1{font-size:18px;margin:0 0 2px 0;letter-spacing:.2px;}
   .subtitle{margin:0;font-weight:700;color:#0c2a66;font-size:12px;opacity:.95}
@@ -36,158 +38,56 @@
   .ghost{background:#f2f6ff;color:#0c2a66;border:1px solid #cfe0ff}
 
   .card{margin-top:0;background:var(--card);border-radius:var(--radius);padding:10px;border:1px solid #e6e8ef;box-shadow:0 6px 20px rgba(0,0,0,.06);}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
-  .field{display:flex;flex-direction:column;gap:4px;background:linear-gradient(180deg,#fafbff,var(--bg-accent));border:1px solid #eef0f6;border-radius:10px;padding:8px 8px;}
+  .topmeta{
+    display:grid;grid-template-columns:260px 260px;gap:8px;justify-content:center;margin:4px 0 8px;
+  }
+  .topmeta .field{background:linear-gradient(180deg,#ffffff,#fff4a8);}
+
+  .columns{
+    display:block; /* normal: empilhado (leitura confortável) */
+  }
+
+  .col{display:grid;grid-template-columns:1fr;gap:8px}
+  .field{
+    display:flex;flex-direction:column;gap:4px;background:linear-gradient(180deg,#fafbff,var(--bg-accent));
+    border:1px solid var(--border);border-radius:10px;padding:8px 8px;
+  }
   .field label{font-size:11px;color:#193057;font-weight:800;line-height:1.1;}
-  input[type="text"].money,input[type="text"].percent,input[type="text"].ro,select,textarea,input[type="date"],input[type="text"]{
-    width:100%;padding:6px 8px;border:1px solid #dde3f3;border-radius:8px;background:#fff;font-size:12px;font-weight:700;color:#0f172a;line-height:1.1;
+  input[type="text"].money,input[type="text"].percent,select,textarea,input[type="date"],input[type="text"]{
+    width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:700;color:#0f172a;line-height:1.1;
   }
   textarea{min-height:64px;resize:vertical;font-weight:600}
   input[readonly]{background:#f7f7fb;}
+  .print-value{display:none;font-weight:800;font-size:12px;color:#0f172a;background:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 8px;}
   .hint{font-size:10px;color:#6b7280}
-  .kpi{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-  .pill{padding:6px 8px;border-radius:999px;font-weight:800;background:#eef2ff;border:1px dashed #c7d2fe;color:#1e40af;font-size:11px;}
-
   .subtitle-sep{
-    grid-column:1 / -1; margin:0; padding:6px 8px;
-    background:linear-gradient(90deg,#fff3b0,#ffe88f);
-    border:1px solid #f3c300;border-radius:9px;
-    font-weight:900;color:#0f274d;font-size:12px;letter-spacing:.2px;
+    padding:6px 8px;margin:4px 0;background:linear-gradient(90deg,#fff3b0,#ffe88f);
+    border:1px solid #f3c300;border-radius:9px;font-weight:900;color:#0f274d;font-size:12px;letter-spacing:.2px;
   }
 
-  .legend{margin-top:8px;font-size:11px;color:#374151;background:#fff8db;border:1px solid #f3c300;padding:6px 8px;border-radius:9px;line-height:1.25}
-  .legend b{color:#1f2937}
-
-  .print-value{display:none;font-weight:800;font-size:12px;color:#0f172a;background:#fff;border:1px solid #dde3f3;border-radius:8px;padding:6px 8px;}
-  .print-mode .field input,.print-mode .field select,.print-mode .field textarea{display:none;}
+  /* PRÉ-VISUALIZAÇÃO/IMPRESSÃO: esconder entradas e mostrar espelho */
+  .print-mode .field input,
+  .print-mode .field select,
+  .print-mode .field textarea{display:none;}
   .print-mode .field .print-value{display:block;}
 
-  #capture{border:2px solid var(--bb-blue);border-radius:14px;padding:10px;background:linear-gradient(180deg,#fff,#f8fbff);box-shadow:0 8px 28px rgba(0,35,90,.12) inset;}
-
-  /* Ultra-condensed for export (3 columns, tiny gaps) */
-  .ultra #capture{max-width:794px;margin:0 auto;}
-  .ultra .grid{gap:2px; grid-template-columns:1fr 1fr 1fr;}
-  .ultra .field{padding:5px;border-radius:7px;background:linear-gradient(180deg,#ffffff,#fff6bf);}
-  .ultra .field label{font-size:10px;}
-  .ultra input, .ultra select, .ultra textarea{padding:4px 5px;font-size:10px;border-radius:6px;}
-  .ultra h1{font-size:16px;}
-  .ultra .subtitle{font-size:11px;}
-  .ultra .titlecard{padding:6px 8px;border-radius:10px;}
-  .ultra .pill{padding:3px 5px;font-size:10px;}
-  .ultra .print-value{padding:4px 5px;font-size:10px;}
-  .ultra .subtitle-sep{padding:4px 6px;font-size:10px;border-radius:7px;}
-
-  /* Barra superior destacada para Prefixo e Agência (sem alterar o restante) */
-  .topmeta{
-    display:grid; grid-template-columns:1fr 1fr; gap:8px;
-    margin:4px 0 8px;
+  /* EXPORTAÇÃO (PNG) • A4 Paisagem • 3 colunas fixas */
+  .ultra #capture{max-width:1123px;width:1123px;margin:0 auto;}
+  .ultra .columns{
+    display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:8px;
   }
-  .topmeta .field{background:linear-gradient(180deg,#ffffff,#fff4a8);}
-  .topmeta .field label{font-size:13px; color:#0c2a66; font-weight:900;}
-  .topmeta input[type="text"]{font-size:16px; padding:8px 10px; font-weight:800; border-width:2px;}
-  /* No modo ultra (export), mantém destaque porém mais compacto */
-  .ultra .topmeta{gap:4px; margin:2px 0 6px;}
-  .ultra .topmeta .field label{font-size:10px;}
-  .ultra .topmeta input[type="text"]{font-size:12px; padding:4px 6px; border-width:1px;}
-
-
-  /* Auto 3–4 colunas no modo de exportação (.ultra) em A4 (≈794px) */
-  .ultra #capture{max-width:794px;margin:0 auto;}
-  .ultra .grid{gap:2px !important; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)) !important;}
-  .ultra .field{padding:3px !important;border-radius:6px !important;}
-  .ultra .field label{font-size:9px !important; line-height:1.05;}
-  .ultra input, .ultra select, .ultra textarea{padding:2px 3px !important;font-size:9px !important;border-radius:5px !important;}
-  .ultra h1{font-size:15px !important;}
-  .ultra .subtitle{font-size:10px !important;}
-  .ultra .titlecard{padding:5px 6px !important;border-radius:8px !important;}
-  .ultra .pill{padding:2px 4px !important;font-size:9px !important;}
-  .ultra .print-value{padding:3px 4px !important;font-size:9px !important;}
-  .ultra .subtitle-sep{padding:3px 5px !important;font-size:9px !important;border-radius:6px !important;}
-
-
-  /* A4 landscape (~1123px) + 3–4 colunas automáticas no modo de exportação (.ultra) */
-  .ultra #capture{max-width:1123px; width:1123px; margin:0 auto;}
-  .ultra .grid{gap:2px !important; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)) !important;}
-  .ultra .field{padding:3px !important;border-radius:6px !important;}
-  .ultra .field label{font-size:9px !important; line-height:1.05;}
-  .ultra input, .ultra select, .ultra textarea{padding:2px 3px !important;font-size:9px !important;border-radius:5px !important;}
-  .ultra h1{font-size:16px !important;}
-  .ultra .subtitle{font-size:11px !important;}
-  .ultra .titlecard{padding:6px 8px !important;border-radius:8px !important;}
-  .ultra .pill{padding:2px 4px !important;font-size:9px !important;}
-  .ultra .print-value{padding:3px 4px !important;font-size:9px !important;}
-  .ultra .subtitle-sep{padding:3px 5px !important;font-size:9px !important;border-radius:6px !important;}
-
-
-  /* ULTRA-MAX: hiper-compacto para PNG com alta resolução */
-  .ultra #capture{max-width:1123px; width:1123px; margin:0 auto;}
-  .ultra .grid{
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important;
-    gap:1px !important;
-  }
-  /* Zerar margens extras no ultra */
-  .ultra .legend, .ultra .kpi { display:none !important; }
-  .ultra .subtitle-sep { margin:0 !important; }
-  /* Campos super compactos */
-  .ultra .field{padding:2px !important; border-radius:4px !important; border-width:1px !important;}
-  .ultra .field label{font-size:8.5px !important; line-height:1.05; letter-spacing:.1px;}
-  .ultra input, .ultra select, .ultra textarea{
-    padding:2px 3px !important;
-    font-size:9px !important;
-    border-radius:4px !important;
-    line-height:1.1;
-  }
-  /* Texto espelhado também menor */
-  .ultra .print-value{padding:2px 3px !important; font-size:9px !important; border-radius:4px !important;}
-  /* Cabeçalho e subtítulo mais enxutos */
-  .ultra h1{font-size:14px !important; margin:0 !important;}
-  .ultra .subtitle{font-size:10px !important; margin:0 !important;}
-  .ultra .titlecard{padding:4px 6px !important; border-radius:6px !important;}
-  .ultra .actions button{padding:4px 6px !important; font-size:10px !important; border-radius:5px !important;}
-  /* Visual mais chapado para reduzir interferência e "ruído" na compactação */
-  .ultra .field{ background:#fff !important; }
-  .ultra #capture{ background:#fff !important; box-shadow:none !important; border-color:#c9d4fb !important; }
-  .ultra .subtitle-sep{ background:#fffdd0 !important; padding:3px 4px !important; font-size:9px !important; border-radius:4px !important; }
-
-
-  /* STRICT 3-COLS EXPORT:
-     - Prefixo & Agência centralizados no topo (2 blocos) 
-     - TODO o restante em 3 colunas fixas
-  */
-  .ultra #capture{max-width:1123px; width:1123px; margin:0 auto;}
-  /* Centraliza os dois campos do topo */
-  .ultra .topmeta{
-    display:grid !important;
-    grid-template-columns: 260px 260px !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    margin-bottom: 6px !important;
-  }
-  .ultra .topmeta .field{padding:4px !important;}
-  .ultra .topmeta .field label{font-size:11px !important;}
-  .ultra .topmeta input[type="text"]{font-size:13px !important; padding:4px 6px !important;}
-
-  /* Força exatamente 3 colunas para os demais campos */
-  .ultra .grid{
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 2px !important;
-  }
-  /* Compactação razoável (já tínhamos ultra-max; aqui mantemos legibilidade) */
-  .ultra .field{padding:3px !important; border-radius:6px !important;}
-  .ultra .field label{font-size:10px !important; line-height:1.08;}
-  .ultra input, .ultra select, .ultra textarea{
-    padding:3px 4px !important; font-size:10px !important; border-radius:5px !important;
-  }
-  .ultra .print-value{padding:3px 4px !important; font-size:10px !important;}
-  .ultra .subtitle-sep{grid-column:1 / -1 !important; margin:2px 0 !important; padding:4px 6px !important; font-size:10px !important;}
-  .ultra h1{font-size:16px !important; margin:0 !important;}
-  .ultra .subtitle{font-size:11px !important; margin:0 !important;}
-  .ultra .titlecard{padding:6px 8px !important; border-radius:8px !important;}
-
+  .ultra .col{gap:2px}
+  .ultra .field{padding:3px;border-radius:6px;background:#fff}
+  .ultra .field label{font-size:10px;line-height:1.08}
+  .ultra input,.ultra select,.ultra textarea{padding:3px 4px;font-size:10px;border-radius:5px}
+  .ultra .print-value{padding:3px 4px;font-size:10px;border-radius:5px}
+  .ultra .subtitle-sep{padding:4px 6px;margin:2px 0;font-size:10px;border-radius:6px}
+  .ultra h1{font-size:16px;margin:0}
+  .ultra .subtitle{font-size:11px;margin:0}
+  .ultra .titlecard{padding:6px 8px;border-radius:8px}
 </style>
 </head>
-<body class="compact">
+<body>
 <div class="page">
   <div id="capture" class="card">
     <div class="titlecard">
@@ -200,7 +100,8 @@
         <button class="primary" id="savePng">Salvar em imagem (PNG)</button>
       </div>
     </div>
-    
+
+    <!-- TOPO CENTRALIZADO -->
     <div class="topmeta">
       <div class="field">
         <label for="prefixo">Prefixo</label>
@@ -214,214 +115,157 @@
       </div>
     </div>
 
-    <div class="grid">
+    <!-- 3 COLUNAS FIXAS NA EXPORTAÇÃO -->
+    <div class="columns">
+      <!-- COLUNA 1: de Prefixo (referência visual já no topo) até Rating -->
+      <div class="col col1">
+        <div class="field">
+          <label for="cliente-desde">Cliente desde (Data)</label>
+          <input id="cliente-desde" type="date">
+          <div class="print-value" data-from="cliente-desde"></div>
+        </div>
 
-      <div class="field">
-        <label for="alcada">Alçada</label>
-        <input id="alcada" type="text" placeholder="">
-        <div class="print-value" data-from="alcada"></div>
+        <div class="field">
+          <label for="valor-operacao">Valor da operação (R$)</label>
+          <input id="valor-operacao" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="valor-operacao"></div>
+        </div>
+
+        <div class="field">
+          <label for="rs-contratado">R$ contratado na operação (R$)</label>
+          <input id="rs-contratado" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="rs-contratado"></div>
+        </div>
+
+        <div class="field">
+          <label for="receita-obtida">Receita bruta total obtida (R$)</label>
+          <input id="receita-obtida" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="receita-obtida"></div>
+        </div>
+
+        <div class="field">
+          <label for="receita-prevista">Receita bruta total prevista (R$)</label>
+          <input id="receita-prevista" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="receita-prevista"></div>
+        </div>
+
+        <div class="field">
+          <label for="rop-obtido">Resultado operacional pecuário (obtido) (R$)</label>
+          <input id="rop-obtido" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="rop-obtido"></div>
+        </div>
+
+        <div class="field">
+          <label for="rop-previsto">Resultado operacional pecuário (previsto) (R$)</label>
+          <input id="rop-previsto" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="rop-previsto"></div>
+        </div>
+
+        <div class="field">
+          <label for="recursos-liquidos">Recursos líquidos (R$)</label>
+          <input id="recursos-liquidos" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="recursos-liquidos"></div>
+        </div>
+
+        <div class="field">
+          <label for="patrimonio-total">Patrimônio total (R$)</label>
+          <input id="patrimonio-total" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="patrimonio-total"></div>
+        </div>
+
+        <div class="field">
+          <label for="inad-agro">Inad Agro Agência (rel 5398) (R$)</label>
+          <input id="inad-agro" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="inad-agro"></div>
+        </div>
+
+        <div class="field">
+          <label for="rating">Rating</label>
+          <input id="rating" type="text" placeholder="">
+          <div class="print-value" data-from="rating"></div>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="mci">MCI</label>
-        <input id="mci" type="text" placeholder="">
-        <div class="print-value" data-from="mci"></div>
+      <!-- COLUNA 2: de Autorização Grão até Garantias -->
+      <div class="col col2">
+        <div class="subtitle-sep">RECEITA BRUTA - CLIENTES 03-20-41 — SELECIONAR LC, F12-6-F9</div>
+
+        <div class="field">
+          <label for="autorizacao-grao">Autorização Grão</label>
+          <textarea id="autorizacao-grao" placeholder=""></textarea>
+          <div class="print-value" data-from="autorizacao-grao"></div>
+        </div>
+
+        <div class="field">
+          <label for="pecuaria-compat">Pecuária: Quantidade de animais compatível com a área do cliente?</label>
+          <select id="pecuaria-compat">
+            <option value="" selected disabled>Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+            <option>Não se aplica</option>
+          </select>
+          <div class="print-value" data-from="pecuaria-compat"></div>
+          <label for="pecuaria-just">Justifique</label>
+          <textarea id="pecuaria-just" placeholder="Descreva a justificativa"></textarea>
+          <div class="print-value" data-from="pecuaria-just"></div>
+        </div>
+
+        <div class="field">
+          <label for="endiv-sfn">Endividamento no SFN (R$)</label>
+          <input id="endiv-sfn" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="endiv-sfn"></div>
+        </div>
+
+        <div class="field">
+          <label for="endiv-bb">Endividamento no BB (R$)</label>
+          <input id="endiv-bb" class="money" type="text" inputmode="decimal" placeholder="0,00">
+          <div class="print-value" data-from="endiv-bb"></div>
+        </div>
+
+        <div class="field">
+          <label for="garantias">Garantias</label>
+          <textarea id="garantias" placeholder=""></textarea>
+          <div class="print-value" data-from="garantias"></div>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="cliente">Cliente</label>
-        <input id="cliente" type="text" placeholder="">
-        <div class="print-value" data-from="cliente"></div>
-      </div>
+      <!-- COLUNA 3: de Share BB até Rende Fácil -->
+      <div class="col col3">
+        <div class="field">
+          <label for="share-bb">Share BB (%) = Endiv. BB ÷ Endiv. SFN</label>
+          <input id="share-bb" class="percent" type="text" readonly placeholder="0,00%">
+          <div class="print-value" data-from="share-bb"></div>
+          <div class="hint">Atualiza automaticamente conforme os valores de endividamento.</div>
+        </div>
 
-      <div class="field">
-        <label for="idade-do-cliente">Idade do Cliente</label>
-        <input id="idade-do-cliente" type="text" placeholder="">
-        <div class="print-value" data-from="idade-do-cliente"></div>
-      </div>
+        <div class="field">
+          <label for="proposta-customizada">Proposta customizada</label>
+          <select id="proposta-customizada">
+            <option value="" selected disabled>Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+            <option>Não se aplica</option>
+          </select>
+          <div class="print-value" data-from="proposta-customizada"></div>
+        </div>
 
-      <div class="field">
-        <label for="cliente-desde">Cliente desde (Data)</label>
-        <input id="cliente-desde" type="date">
-        <div class="print-value" data-from="cliente-desde"></div>
-      </div>
-
-      <div class="field">
-        <label for="proposta">Proposta</label>
-        <input id="proposta" type="text" placeholder="">
-        <div class="print-value" data-from="proposta"></div>
-      </div>
-
-      <div class="field">
-        <label for="linha-de-credito">Linha de Crédito</label>
-        <input id="linha-de-credito" type="text" placeholder="">
-        <div class="print-value" data-from="linha-de-credito"></div>
-      </div>
-
-      <div class="field">
-        <label for="item-financiado">Item Financiado</label>
-        <input id="item-financiado" type="text" placeholder="">
-        <div class="print-value" data-from="item-financiado"></div>
-      </div>
-
-      <div class="field">
-        <label for="rating">Rating</label>
-        <input id="rating" type="text" placeholder="">
-        <div class="print-value" data-from="rating"></div>
-      </div>
-      <div class="subtitle-sep">-----------------------------------------------------------------------------------------------------------------------------------
-
-      <div class="field">
-        <label for="autorizacao-grao">Autorização Grão</label>
-        <textarea id="autorizacao-grao" placeholder=""></textarea>
-        <div class="print-value" data-from="autorizacao-grao"></div>
-      </div>
-
-      <div class="field">
-        <label for="valor-operacao">Valor Operação (R$)</label>
-        <input id="valor-operacao" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="valor-operacao"></div>
-      </div>
-
-      <div class="field">
-        <label for="seguros-quais">Seguros (Quais?)</label>
-        <input id="seguros-quais" type="text" placeholder="">
-        <div class="print-value" data-from="seguros-quais"></div>
-      </div>
-
-      <div class="field">
-        <label for="rs-contratado-na-operacao">RS contratado na operação (R$)</label>
-        <input id="rs-contratado-na-operacao" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="rs-contratado-na-operacao"></div>
-      </div>
-
-      <div class="field">
-        <label for="limite-de-credito-vigencia-e-risco">Limite de Crédito (Vigência e Risco)</label>
-        <input id="limite-de-credito-vigencia-e-risco" type="text" placeholder="">
-        <div class="print-value" data-from="limite-de-credito-vigencia-e-risco"></div>
-      </div>
-
-      <div class="field">
-        <label for="condicionante-do-lc-qual">Condicionante do LC (Qual?)</label>
-        <input id="condicionante-do-lc-qual" type="text" placeholder="">
-        <div class="print-value" data-from="condicionante-do-lc-qual"></div>
-      </div>
-      <div class="subtitle-sep">RECEITA BRUTA - CLIENTES 03-20-41 SELECIONAR LC, F12-6-F9</div>
-
-      <div class="field">
-        <label for="receita-bruta-total-obtida">Receita Bruta Total Obtida (R$)</label>
-        <input id="receita-bruta-total-obtida" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="receita-bruta-total-obtida"></div>
-      </div>
-
-      <div class="field">
-        <label for="receita-bruta-total-prevista">Receita Bruta Total Prevista (R$)</label>
-        <input id="receita-bruta-total-prevista" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="receita-bruta-total-prevista"></div>
-      </div>
-
-      <div class="field">
-        <label for="resultado-operacional-agropecuario-obtido">Resultado Operacional Agropecuário Obtido (R$)</label>
-        <input id="resultado-operacional-agropecuario-obtido" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="resultado-operacional-agropecuario-obtido"></div>
-      </div>
-
-      <div class="field">
-        <label for="resultado-operacional-agropecuario-previsto">Resultado Operacional Agropecuário Previsto (R$)</label>
-        <input id="resultado-operacional-agropecuario-previsto" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="resultado-operacional-agropecuario-previsto"></div>
-      </div>
-
-      <div class="field">
-        <label for="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho">Pecuária: Quantidade de animais compatível com área do cliente? (Se não, justifique o apascentamento aqui e no despacho)</label>
-        <select id="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho">
-          <option value="" selected disabled>Selecione</option>
-          <option>Sim</option>
-          <option>Não</option>
-          <option>Não se aplica</option>
-        </select>
-        <div class="print-value" data-from="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho"></div>
-        <label for="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-justificativa">Justifique</label>
-        <textarea id="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-justificativa" placeholder="Descreva a justificativa"></textarea>
-        <div class="print-value" data-from="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-justificativa"></div>
-      </div>
-
-      <div class="field">
-        <label for="garantias">Garantias</label>
-        <input id="garantias" type="text" placeholder="">
-        <div class="print-value" data-from="garantias"></div>
-      </div>
-      <div class="subtitle-sep">-----------------------------------------------------------------------------------------------------------------------------------</div>
-
-      <div class="field">
-        <label for="share-bb-preenchimento-automatico">Share BB ( preenchimento automático) (%) = Endiv. BB ÷ Endiv. SFN</label>
-        <input id="share-bb-preenchimento-automatico" class="percent" type="text" readonly placeholder="0,00%">
-        <div class="print-value" data-from="share-bb-preenchimento-automatico"></div>
-      </div>
-
-      <div class="field">
-        <label for="recursos-liquidos">Recursos liquidos (R$)</label>
-        <input id="recursos-liquidos" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="recursos-liquidos"></div>
-      </div>
-
-      <div class="field">
-        <label for="patrimonio-total">Patrimônio Total (R$)</label>
-        <input id="patrimonio-total" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="patrimonio-total"></div>
-      </div>
-
-      <div class="field">
-        <label for="endividamento-no-sfn">Endividamento no SFN (R$)</label>
-        <input id="endividamento-no-sfn" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="endividamento-no-sfn"></div>
-      </div>
-
-      <div class="field">
-        <label for="endividamento-no-bb">Endividamento no BB (R$)</label>
-        <input id="endividamento-no-bb" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="endividamento-no-bb"></div>
-      </div>
-
-      <div class="field">
-        <label for="inad-agro-agencia-rel-5398">Inad Agro Agência (rel 5398) (R$)</label>
-        <input id="inad-agro-agencia-rel-5398" class="money" type="text" inputmode="decimal" placeholder="0,00">
-        <div class="print-value" data-from="inad-agro-agencia-rel-5398"></div>
-      </div>
-
-      <div class="field">
-        <label for="proposta-customizada">Proposta Customizada</label>
-        <select id="proposta-customizada">
-          <option value="" selected disabled>Selecione</option>
-          <option>Sim</option>
-          <option>Não</option>
-          <option>Não se aplica</option>
-        </select>
-        <div class="print-value" data-from="proposta-customizada"></div>
-      </div>
-
-      <div class="field">
-        <label for="de-operacoes-do-cliente-com-garantia-hipotecaria">% de operações do cliente Com garantia Hipotecária (%)</label>
-        <input id="de-operacoes-do-cliente-com-garantia-hipotecaria" class="percent" type="text" inputmode="decimal" placeholder="0,00%">
-        <div class="print-value" data-from="de-operacoes-do-cliente-com-garantia-hipotecaria"></div>
-      </div>
-
-      <div class="field">
-        <label for="rende-facil">Rende Fácil</label>
-        <select id="rende-facil">
-          <option value="" selected disabled>Selecione</option>
-          <option>Sim</option>
-          <option>Não</option>
-          <option>Não se aplica</option>
-        </select>
-        <div class="print-value" data-from="rende-facil"></div>
+        <div class="field">
+          <label for="rende-facil">Rende Fácil</label>
+          <select id="rende-facil">
+            <option value="" selected disabled>Selecione</option>
+            <option>Sim</option>
+            <option>Não</option>
+            <option>Não se aplica</option>
+          </select>
+          <div class="print-value" data-from="rende-facil"></div>
+        </div>
       </div>
     </div>
-    <div class="legend">
-      <b>Exporte e nos envie a imagem para que sua operação seja votada</b><br>
-    </div>
+
+    <div class="subtitle-sep">Legenda desta versão: 3 colunas na exportação (A4 paisagem, alta resolução); Prefixo & Agência no topo centralizado; Share BB automático; campos monetários em R$; Pecuária com Sim/Não/Não se aplica + Justifique.</div>
   </div>
-  <footer>Use <strong>Salvar em imagem</strong> para exportar o painel completo.</footer>
+
+  <footer style="margin-top:8px;text-align:center;color:#6b7280;font-size:12px;">Use <strong>Salvar em imagem (PNG)</strong> para exportar o painel em 3 colunas.</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
@@ -430,12 +274,13 @@
   const fmtPct = new Intl.NumberFormat('pt-BR', { style:'percent', minimumFractionDigits:2, maximumFractionDigits:2 });
 
   function toNumberBR(v){
-    if(!v) return 0;
-    v = String(v).replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3})/g,'');
-    v = v.replace(',', '.');
-    const n = parseFloat(v);
-    return isNaN(n) ? 0 : n;
+   if(!v) return 0;
+   v = String(v).replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3})/g,'');
+   v = v.replace(',', '.');
+   const n = parseFloat(v);
+   return isNaN(n) ? 0 : n;
   }
+
   function setPrintMirror(id, text){
     const span = document.querySelector(`.print-value[data-from="${id}"]`);
     if(span){ span.textContent = text || ''; }
@@ -449,6 +294,7 @@
     setPrintMirror(el.id, pretty);
     updateShare();
   }
+
   function handlePercentInput(e){
     const el = e.target;
     const raw = toNumberBR(el.value)/100.0;
@@ -456,43 +302,36 @@
     const pretty = fmtPct.format(raw);
     setPrintMirror(el.id, pretty);
   }
+
   function bindMirror(el){ el.addEventListener('input', ()=> setPrintMirror(el.id, el.value || '')); }
 
-  // Mirror helpers for export
+  // Espelha tudo antes do PNG
   function syncAllToPrint(){
     // Money
     document.querySelectorAll('input.money').forEach(el=>{
       let raw = el.dataset.raw;
-      if(raw === undefined || raw === ""){
-        raw = toNumberBR(el.value);
-        el.dataset.raw = raw;
-      }
+      if(raw === undefined || raw === ""){ raw = toNumberBR(el.value); el.dataset.raw = raw; }
       setPrintMirror(el.id, fmtBRL.format(parseFloat(raw||0)));
     });
-    // Percent (editable)
+    // Percent editável
     document.querySelectorAll('input.percent:not([readonly])').forEach(el=>{
       let rp = el.dataset.rawpct;
-      if(rp === undefined || rp === ""){
-        rp = toNumberBR(el.value)/100.0;
-        el.dataset.rawpct = rp;
-      }
+      if(rp === undefined || rp === ""){ rp = toNumberBR(el.value)/100.0; el.dataset.rawpct = rp; }
       setPrintMirror(el.id, fmtPct.format(parseFloat(rp||0)));
     });
     // Percent readonly (Share)
     document.querySelectorAll('input.percent[readonly]').forEach(el=>{
       setPrintMirror(el.id, el.value || "0,00%");
     });
-    // Date
+    // Data
     document.querySelectorAll('input[type="date"]').forEach(el=>{
       if(el.value){
         const d = new Date(el.value);
         const txt = d.toLocaleDateString('pt-BR', { timeZone:'UTC' });
         setPrintMirror(el.id, txt);
-      }else{
-        setPrintMirror(el.id, "");
-      }
+      }else{ setPrintMirror(el.id, ""); }
     });
-    // Text + Textarea
+    // Texto e Textarea
     document.querySelectorAll('textarea, input[type="text"]:not(.money):not(.percent)').forEach(el=>{
       setPrintMirror(el.id, el.value || '');
     });
@@ -500,11 +339,11 @@
     document.querySelectorAll('select').forEach(el=>{
       setPrintMirror(el.id, el.value || '');
     });
-    // Recompute Share at the end to ensure latest mirroring
+    // Share
     updateShare();
   }
 
-  // Event wiring
+  // Eventos e formatação
   document.querySelectorAll('input.money').forEach(el=>{
     el.addEventListener('input', handleMoneyInput);
     el.dataset.raw = el.dataset.raw || 0;
@@ -522,47 +361,46 @@
     el.addEventListener('change', ()=> setPrintMirror(el.id, el.value || ''));
   });
 
-  const idEndivSfn = 'endividamento-no-sfn';
-  const idEndivBb  = 'endividamento-no-bb';
-  const idShare    = 'share-bb-preenchimento-automatico';
+  // Share calc
   function updateShare(){
-    if(!idEndivSfn || !idEndivBb || !idShare) return;
-    const sfnEl = document.getElementById(idEndivSfn);
-    const bbEl  = document.getElementById(idEndivBb);
-    const shareEl = document.getElementById(idShare);
+    const sfnEl = document.getElementById('endiv-sfn');
+    const bbEl = document.getElementById('endiv-bb');
+    const shareEl = document.getElementById('share-bb');
     if(!sfnEl || !bbEl || !shareEl) return;
-    const sfn = parseFloat(sfnEl.dataset.raw || 0);
-    const bb  = parseFloat(bbEl.dataset.raw  || 0);
+    const sfn = parseFloat(sfnEl.dataset.raw || toNumberBR(sfnEl.value) || 0);
+    const bb = parseFloat(bbEl.dataset.raw || toNumberBR(bbEl.value) || 0);
     const share = (sfn > 0) ? (bb/sfn) : 0;
     const text = fmtPct.format(share);
     shareEl.value = text;
-    setPrintMirror(idShare, text);
+    setPrintMirror('share-bb', text);
   }
 
+  // Toggle pré-visualização
   const toggleBtn = document.getElementById('togglePrint');
   toggleBtn.addEventListener('click', ()=>{
     document.body.classList.toggle('print-mode');
     toggleBtn.textContent = document.body.classList.contains('print-mode') ? 'Sair da pré-visualização' : 'Pré-visualizar impressão';
   });
 
+  // Exportar PNG (A4 paisagem, alta resolução, 3 colunas fixas)
   document.getElementById('savePng').addEventListener('click', async ()=>{
     const wasPrint = document.body.classList.contains('print-mode');
-    document.body.classList.add('ultra'); // super compacto e 3 colunas
-    // Sync all fields BEFORE hiding inputs
-    syncAllToPrint();
+    document.body.classList.add('ultra'); // ativa 3 colunas fixas
+    syncAllToPrint(); // espelha valores
     if(!wasPrint) document.body.classList.add('print-mode');
+
     const node = document.querySelector('#capture');
-    const scale = window.devicePixelRatio > 1 ? 2 : 1;
-    const canvas = await html2canvas(node, {backgroundColor:'#ffffff', scale});
+    const canvas = await html2canvas(node, {backgroundColor:'#ffffff', scale:3}); // HD
     const link = document.createElement('a');
-    link.download = 'super-barreiras-analise-ultra-compact.png';
+    link.download = 'super-barreiras-3colunas-hd.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
+
     if(!wasPrint) document.body.classList.remove('print-mode');
     document.body.classList.remove('ultra');
   });
 
-  // Initialize computed Share on load
+  // Inicializa Share
   updateShare();
 </script>
 </body>
