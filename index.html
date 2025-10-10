@@ -3,82 +3,90 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SUPER BARREIRAS - ANALISE DE OPERACOES</title>
+<title>SUPER BARREIRAS</title>
+<p class="subtitle">Análise de Operações</p>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
   :root{
     --bb-yellow:#FFCC00;
     --bb-blue:#003399;
-    --ink:#0f172a;
+    --ink:#0c1424;
     --muted:#6b7280;
-    --bg:#f6f7fb;
+    --bg:#f3f6ff;           /* leve azulado */
+    --bg-accent:#fff7d1;    /* amarelo claro */
+    --bg-accent-2:#e8f7ff;  /* azul clarinho */
     --card:#ffffff;
-    --radius:18px;
+    --radius:12px;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-  .page{max-width:1100px;margin:24px auto 56px;padding:0 16px;}
+  html,body{margin:0;background:linear-gradient(180deg, var(--bg-accent-2), var(--bg));color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .page{max-width:980px;margin:16px auto 32px;padding:0 10px;}
   .titlecard{
-    background:linear-gradient(135deg,var(--bb-yellow),#ffd84d);
-    border:2px solid #f3c300;color:#0b0b0b;border-radius:var(--radius);
-    padding:18px 20px;display:flex;justify-content:space-between;align-items:center;
-    box-shadow:0 8px 24px rgba(0,0,0,.06);
-    margin-bottom:12px;
+    background:linear-gradient(135deg,var(--bb-yellow),#ffe480);
+    border:1px solid #f3c300;color:#0b0b0b;border-radius:var(--radius);
+    padding:8px 10px;display:flex;justify-content:space-between;align-items:center;
+    box-shadow:0 6px 24px rgba(0,0,0,.08);
+    margin-bottom:6px;
   }
-  h1{font-size:clamp(22px,2.6vw,32px);margin:0 0 2px 0;letter-spacing:.2px;}
-  .actions{display:flex;gap:10px;flex-wrap:wrap}
-  button,.ghost{border:none;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer;}
-  .primary{background:var(--bb-blue);color:#fff;box-shadow:0 6px 18px rgba(0,51,153,.25)}
-  .ghost{background:rgba(0,0,0,.06);color:#111;}
+  h1{font-size:18px;margin:0 0 2px 0;letter-spacing:.2px;}
+  .subtitle{margin:0;font-weight:700;color:#0c2a66;font-size:12px;opacity:.95}
+  .actions{display:flex;gap:6px;flex-wrap:wrap}
+  button,.ghost{border:none;border-radius:8px;padding:6px 8px;font-weight:700;cursor:pointer;font-size:12px;}
+  .primary{background:var(--bb-blue);color:#fff;box-shadow:0 6px 18px rgba(0,51,153,.28)}
+  .ghost{background:#f2f6ff;color:#0c2a66;border:1px solid #cfe0ff}
 
-  .card{margin-top:0;background:var(--card);border-radius:var(--radius);padding:18px;border:1px solid #e6e8ef;box-shadow:0 6px 18px rgba(0,0,0,.04);}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .card{margin-top:0;background:var(--card);border-radius:var(--radius);padding:10px;border:1px solid #e6e8ef;box-shadow:0 6px 20px rgba(0,0,0,.06);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
   @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
-  .field{display:flex;flex-direction:column;gap:8px;background:#fafbff;border:1px solid #eef0f6;border-radius:14px;padding:12px 12px;}
-  .field label{font-size:13px;color:#334155;font-weight:700;}
+  .field{display:flex;flex-direction:column;gap:4px;background:linear-gradient(180deg,#fafbff,var(--bg-accent));border:1px solid #eef0f6;border-radius:10px;padding:8px 8px;}
+  .field label{font-size:11px;color:#193057;font-weight:800;line-height:1.1;}
   input[type="text"].money,input[type="text"].percent,input[type="text"].ro,select,textarea,input[type="date"],input[type="text"]{
-    width:100%;padding:12px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;font-size:15px;font-weight:600;color:#0f172a;
+    width:100%;padding:6px 8px;border:1px solid #dde3f3;border-radius:8px;background:#fff;font-size:12px;font-weight:700;color:#0f172a;line-height:1.1;
   }
-  textarea{min-height:84px;resize:vertical;font-weight:500}
+  textarea{min-height:64px;resize:vertical;font-weight:600}
   input[readonly]{background:#f7f7fb;}
-  .hint{font-size:11px;color:var(--muted)}
-  .kpi{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
-  .pill{padding:10px 12px;border-radius:999px;font-weight:700;background:#eef2ff;border:1px dashed #c7d2fe;color:#1e40af;font-size:13px;}
+  .hint{font-size:10px;color:#6b7280}
+  .kpi{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .pill{padding:6px 8px;border-radius:999px;font-weight:800;background:#eef2ff;border:1px dashed #c7d2fe;color:#1e40af;font-size:11px;}
 
   .subtitle-sep{
-    grid-column:1 / -1;
-    margin:4px 0 0 0;
-    padding:8px 12px;
-    background:#fff3b0;border:1px solid #f3c300;border-radius:12px;
-    font-weight:800;color:#1f2937;font-size:14px;
+    grid-column:1 / -1; margin:0; padding:6px 8px;
+    background:linear-gradient(90deg,#fff3b0,#ffe88f);
+    border:1px solid #f3c300;border-radius:9px;
+    font-weight:900;color:#0f274d;font-size:12px;letter-spacing:.2px;
   }
 
-  .legend{margin-top:12px;font-size:12px;color:#374151;background:#fff8db;border:1px solid #f3c300;padding:10px 12px;border-radius:12px;}
+  .legend{margin-top:8px;font-size:11px;color:#374151;background:#fff8db;border:1px solid #f3c300;padding:6px 8px;border-radius:9px;line-height:1.25}
   .legend b{color:#1f2937}
 
-  .print-value{display:none;font-weight:700;font-size:15px;color:#0f172a;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px 12px;}
+  .print-value{display:none;font-weight:800;font-size:12px;color:#0f172a;background:#fff;border:1px solid #dde3f3;border-radius:8px;padding:6px 8px;}
   .print-mode .field input,.print-mode .field select,.print-mode .field textarea{display:none;}
   .print-mode .field .print-value{display:block;}
 
-  #capture{border:3px solid var(--bb-blue);border-radius:22px;padding:18px;background:linear-gradient(180deg,#fff,#fbfcff);box-shadow:0 10px 30px rgba(0,35,90,.12) inset;}
+  #capture{border:2px solid var(--bb-blue);border-radius:14px;padding:10px;background:linear-gradient(180deg,#fff,#f8fbff);box-shadow:0 8px 28px rgba(0,35,90,.12) inset;}
 
-  .compact #capture{max-width:794px;margin:0 auto;}
-  .compact .grid{gap:8px;}
-  .compact .field{padding:8px;border-radius:10px;}
-  .compact .field label{font-size:12px;}
-  .compact input, .compact select, .compact textarea{padding:8px 10px;font-size:13px;border-radius:10px;}
-  .compact h1{font-size:20px;}
-  .compact .titlecard{padding:10px 12px;border-radius:12px;}
-  .compact .pill{padding:6px 8px;font-size:11px;}
-  .compact .print-value{padding:8px 10px;font-size:13px;}
-  .compact .subtitle-sep{padding:6px 10px;font-size:12px;border-radius:10px;}
+  /* Ultra-condensed for export (3 columns, tiny gaps) */
+  .ultra #capture{max-width:794px;margin:0 auto;}
+  .ultra .grid{gap:2px; grid-template-columns:1fr 1fr 1fr;}
+  .ultra .field{padding:5px;border-radius:7px;background:linear-gradient(180deg,#ffffff,#fff6bf);}
+  .ultra .field label{font-size:10px;}
+  .ultra input, .ultra select, .ultra textarea{padding:4px 5px;font-size:10px;border-radius:6px;}
+  .ultra h1{font-size:16px;}
+  .ultra .subtitle{font-size:11px;}
+  .ultra .titlecard{padding:6px 8px;border-radius:10px;}
+  .ultra .pill{padding:3px 5px;font-size:10px;}
+  .ultra .print-value{padding:4px 5px;font-size:10px;}
+  .ultra .subtitle-sep{padding:4px 6px;font-size:10px;border-radius:7px;}
 </style>
 </head>
-<body>
+<body class="compact">
 <div class="page">
   <div id="capture" class="card">
     <div class="titlecard">
-      <h1>SUPER BARREIRAS</h1>
+      <div>
+        <h1>SUPER BARREIRAS</h1>
+        <div class="subtitle">Super Barreiras - Análise de Operações</div>
+      </div>
       <div class="actions">
         <button class="ghost" id="togglePrint">Pré-visualizar impressão</button>
         <button class="primary" id="savePng">Salvar em imagem (PNG)</button>
@@ -139,6 +147,7 @@
         <input id="rating" type="text" placeholder="">
         <div class="print-value" data-from="rating"></div>
       </div>
+      <div class="subtitle-sep">--------------------------------------</div>
 
       <div class="field">
         <label for="autorizacao-grao">Autorização Grão</label>
@@ -175,7 +184,6 @@
         <input id="condicionante-do-lc-qual" type="text" placeholder="">
         <div class="print-value" data-from="condicionante-do-lc-qual"></div>
       </div>
-
       <div class="subtitle-sep">RECEITA BRUTA - CLIENTES 03-20-41 SELECIONAR LC, F12-6-F9</div>
 
       <div class="field">
@@ -221,6 +229,7 @@
         <input id="garantias" type="text" placeholder="">
         <div class="print-value" data-from="garantias"></div>
       </div>
+      <div class="subtitle-sep">--------------------------------------</div>
 
       <div class="field">
         <label for="share-bb-preenchimento-automatico">Share BB ( preenchimento automático) (%) = Endiv. BB ÷ Endiv. SFN</label>
@@ -304,7 +313,7 @@
     return isNaN(n) ? 0 : n;
   }
   function setPrintMirror(id, text){
-    const span = document.querySelector(`.print-value[data-from="${id}"]`);
+    const span = document.querySelector(`.print-value[data-from="\${id}"]`);
     if(span){ span.textContent = text || ''; }
   }
   function handleMoneyInput(e){
@@ -385,7 +394,7 @@
 
   document.getElementById('savePng').addEventListener('click', async ()=>{
     const wasPrint = document.body.classList.contains('print-mode');
-    document.body.classList.add('compact');
+    document.body.classList.add('ultra'); // 3 colunas e super compacto
     if(!wasPrint) document.body.classList.add('print-mode');
     document.querySelectorAll('input.money').forEach(el=>{
       const raw = parseFloat(el.dataset.raw || 0);
@@ -405,11 +414,11 @@
     const scale = window.devicePixelRatio > 1 ? 2 : 1;
     const canvas = await html2canvas(node, {backgroundColor:'#ffffff', scale});
     const link = document.createElement('a');
-    link.download = 'super-barreiras-analise-a4-compact.png';
+    link.download = 'super-barreiras-analise-ultra-compact.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
     if(!wasPrint) document.body.classList.remove('print-mode');
-    document.body.classList.remove('compact');
+    document.body.classList.remove('ultra');
   });
 
   updateShare();
