@@ -105,6 +105,51 @@
   .ultra .print-value{padding:3px 4px !important;font-size:9px !important;}
   .ultra .subtitle-sep{padding:3px 5px !important;font-size:9px !important;border-radius:6px !important;}
 
+
+  /* A4 landscape (~1123px) + 3–4 colunas automáticas no modo de exportação (.ultra) */
+  .ultra #capture{max-width:1123px; width:1123px; margin:0 auto;}
+  .ultra .grid{gap:2px !important; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)) !important;}
+  .ultra .field{padding:3px !important;border-radius:6px !important;}
+  .ultra .field label{font-size:9px !important; line-height:1.05;}
+  .ultra input, .ultra select, .ultra textarea{padding:2px 3px !important;font-size:9px !important;border-radius:5px !important;}
+  .ultra h1{font-size:16px !important;}
+  .ultra .subtitle{font-size:11px !important;}
+  .ultra .titlecard{padding:6px 8px !important;border-radius:8px !important;}
+  .ultra .pill{padding:2px 4px !important;font-size:9px !important;}
+  .ultra .print-value{padding:3px 4px !important;font-size:9px !important;}
+  .ultra .subtitle-sep{padding:3px 5px !important;font-size:9px !important;border-radius:6px !important;}
+
+
+  /* ULTRA-MAX: hiper-compacto para PNG com alta resolução */
+  .ultra #capture{max-width:1123px; width:1123px; margin:0 auto;}
+  .ultra .grid{
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important;
+    gap:1px !important;
+  }
+  /* Zerar margens extras no ultra */
+  .ultra .legend, .ultra .kpi { display:none !important; }
+  .ultra .subtitle-sep { margin:0 !important; }
+  /* Campos super compactos */
+  .ultra .field{padding:2px !important; border-radius:4px !important; border-width:1px !important;}
+  .ultra .field label{font-size:8.5px !important; line-height:1.05; letter-spacing:.1px;}
+  .ultra input, .ultra select, .ultra textarea{
+    padding:2px 3px !important;
+    font-size:9px !important;
+    border-radius:4px !important;
+    line-height:1.1;
+  }
+  /* Texto espelhado também menor */
+  .ultra .print-value{padding:2px 3px !important; font-size:9px !important; border-radius:4px !important;}
+  /* Cabeçalho e subtítulo mais enxutos */
+  .ultra h1{font-size:14px !important; margin:0 !important;}
+  .ultra .subtitle{font-size:10px !important; margin:0 !important;}
+  .ultra .titlecard{padding:4px 6px !important; border-radius:6px !important;}
+  .ultra .actions button{padding:4px 6px !important; font-size:10px !important; border-radius:5px !important;}
+  /* Visual mais chapado para reduzir interferência e "ruído" na compactação */
+  .ultra .field{ background:#fff !important; }
+  .ultra #capture{ background:#fff !important; box-shadow:none !important; border-color:#c9d4fb !important; }
+  .ultra .subtitle-sep{ background:#fffdd0 !important; padding:3px 4px !important; font-size:9px !important; border-radius:4px !important; }
+
 </style>
 </head>
 <body class="compact">
