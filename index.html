@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SUPER BARREIRAS</title>
-<p class="subtitle">Análise de operações</p>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
   :root{
@@ -77,6 +76,20 @@
   .ultra .pill{padding:3px 5px;font-size:10px;}
   .ultra .print-value{padding:4px 5px;font-size:10px;}
   .ultra .subtitle-sep{padding:4px 6px;font-size:10px;border-radius:7px;}
+
+  /* Ultra+ overrides: 3 cols & tighter compaction for export */
+  .ultra #capture{max-width:794px;margin:0 auto;}
+  .ultra .grid{gap:2px !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important;}
+  .ultra .field{padding:3px !important;border-radius:6px !important;}
+  .ultra .field label{font-size:9px !important; line-height:1.05;}
+  .ultra input, .ultra select, .ultra textarea{padding:3px 4px !important;font-size:9px !important;border-radius:5px !important;}
+  .ultra h1{font-size:15px !important;}
+  .ultra .subtitle{font-size:10px !important;}
+  .ultra .titlecard{padding:5px 6px !important;border-radius:8px !important;}
+  .ultra .pill{padding:2px 4px !important;font-size:9px !important;}
+  .ultra .print-value{padding:3px 4px !important;font-size:9px !important;}
+  .ultra .subtitle-sep{padding:3px 5px !important;font-size:9px !important;border-radius:6px !important;}
+
 </style>
 </head>
 <body class="compact">
@@ -147,7 +160,8 @@
         <input id="rating" type="text" placeholder="">
         <div class="print-value" data-from="rating"></div>
       </div>
-      <div class="subtitle-sep">----------------------------------------------------------------------------------------------------------------------------------->
+      <div class="subtitle-sep">-----------------------------------------------------------------------------------------------------------------------------------</div>
+
 
       <div class="field">
         <label for="autorizacao-grao">Autorização Grão</label>
@@ -230,6 +244,7 @@
         <div class="print-value" data-from="garantias"></div>
       </div>
       <div class="subtitle-sep">-----------------------------------------------------------------------------------------------------------------------------------</div>
+</div>
 
       <div class="field">
         <label for="share-bb-preenchimento-automatico">Share BB ( preenchimento automático) (%) = Endiv. BB ÷ Endiv. SFN</label>
