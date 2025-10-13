@@ -6,11 +6,7 @@
 <title>SUPER BARREIRAS</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
-  :root{
-    --bb-yellow:#FFCC00; --bb-blue:#003399; --ink:#0c1424; --muted:#6b7280;
-    --bg:#f3f6ff; --bg-accent:#fff7d1; --bg-accent-2:#e8f7ff; --card:#ffffff;
-    --radius:12px; --border:#dde3f3;
-  }
+  :root{ --bb-yellow:#FFCC00; --bb-blue:#003399; --ink:#0c1424; --muted:#6b7280; --bg:#f3f6ff; --bg-accent:#fff7d1; --bg-accent-2:#e8f7ff; --card:#ffffff; --radius:12px; --border:#dde3f3; }
   *{box-sizing:border-box}
   html,body{margin:0;background:linear-gradient(180deg,var(--bg-accent-2),var(--bg));color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
   .page{max-width:980px;margin:16px auto 32px;padding:0 10px;}
@@ -25,7 +21,6 @@
   .card{margin-top:0;background:var(--card);border-radius:var(--radius);padding:10px;border:1px solid #e6e8ef;box-shadow:0 6px 20px rgba(0,0,0,.06);}
   .topmeta{display:grid;grid-template-columns:260px 260px;gap:8px;justify-content:center;margin:4px 0 8px;}
   .topmeta .field{background:linear-gradient(180deg,#ffffff,#fff4a8);}
-
   .columns{display:block;}
   .col{display:grid;grid-template-columns:1fr;gap:8px}
   .field{display:flex;flex-direction:column;gap:4px;background:linear-gradient(180deg,#fafbff,var(--bg-accent));border:1px solid var(--border);border-radius:10px;padding:8px 8px;}
@@ -35,13 +30,8 @@
   input[readonly]{background:#f7f7fb;}
   .print-value{display:none;font-weight:800;font-size:12px;color:#0f172a;background:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 8px;}
   .subtitle-sep{padding:6px 8px;margin:4px 0;background:linear-gradient(90deg,#fff3b0,#ffe88f);border:1px solid #f3c300;border-radius:9px;font-weight:900;color:#0f274d;font-size:12px;letter-spacing:.2px;}
-
-  .print-mode .field input,
-  .print-mode .field select,
-  .print-mode .field textarea{display:none;}
+  .print-mode .field input,.print-mode .field select,.print-mode .field textarea{display:none;}
   .print-mode .field .print-value{display:block;}
-
-  /* EXPORTAÇÃO: 3 colunas fixas - A4 paisagem */
   .ultra #capture{max-width:1123px;width:1123px;margin:0 auto;}
   .ultra .columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
   .ultra .col{gap:2px}
@@ -54,6 +44,204 @@
   .ultra .subtitle{font-size:11px;margin:0}
   .ultra .titlecard{padding:6px 8px;border-radius:8px}
 </style>
+
+<style>
+  /* ====== Aumento geral de fonte em ~60% ====== */
+  h1{ font-size:29px !important; }                    /* 18 -> ~29 */
+  .subtitle{ font-size:19px !important; }             /* 12 -> ~19 */
+  .actions button, .actions .ghost{ font-size:19px !important; padding:10px 12px !important; border-radius:10px !important; }
+
+  .field label{ font-size:18px !important; }          /* 11 -> ~18 */
+  input[type="text"].money,
+  input[type="text"].percent,
+  select, textarea, input[type="date"], input[type="text"]{
+    font-size:19px !important;                        /* 12 -> ~19 */
+    padding:10px 12px !important;                     /* + espaço acompanha a fonte */
+    border-radius:10px !important;
+  }
+  .print-value{ font-size:19px !important; padding:10px 12px !important; border-radius:10px !important; }
+  .subtitle-sep{ font-size:19px !important; padding:10px 12px !important; border-radius:12px !important; }
+
+  /* ====== Exportação (PNG) — manter paisagem e fontes grandes ====== */
+  .ultra #capture{ max-width:1123px; width:1123px; margin:0 auto; }
+  .ultra .columns{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px !important; }
+  .ultra .col{ gap:8px !important; }
+  .ultra .field{ padding:10px !important; border-radius:12px !important; background:#fff !important; }
+  .ultra .field label{ font-size:18px !important; line-height:1.15 !important; }
+  .ultra input, .ultra select, .ultra textarea{ font-size:19px !important; padding:10px 12px !important; border-radius:10px !important; }
+  .ultra .print-value{ font-size:19px !important; padding:10px 12px !important; border-radius:10px !important; }
+  .ultra .subtitle-sep{ font-size:19px !important; padding:10px 12px !important; margin:6px 0 !important; border-radius:12px !important; }
+  .ultra h1{ font-size:29px !important; margin:0 !important; }
+  .ultra .subtitle{ font-size:19px !important; margin:0 !important; }
+  .ultra .titlecard{ padding:10px 12px !important; border-radius:12px !important; }
+</style>
+
+
+<style>
+  /* ===== Ajustes adicionais ===== */
+  .titlecard {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 4px !important;
+  }
+  h1 {
+    font-size: 46px !important; /* 29 -> ~46 (+60%) */
+    text-align: center !important;
+  }
+  .subtitle {
+    font-size: 30px !important; /* 19 -> ~30 */
+    text-align: center !important;
+  }
+  .actions {
+    justify-content: center !important;
+    margin-top: 10px !important;
+  }
+  .actions button, .actions .ghost {
+    font-size: 30px !important;
+    padding: 14px 18px !important;
+    border-radius: 12px !important;
+  }
+  .field label {
+    font-size: 29px !important; /* 18 -> ~29 */
+  }
+  input[type="text"].money,
+  input[type="text"].percent,
+  select, textarea, input[type="date"], input[type="text"] {
+    font-size: 30px !important; /* 19 -> ~30 */
+    padding: 14px 18px !important;
+    border-radius: 12px !important;
+  }
+  .print-value {
+    font-size: 30px !important;
+    padding: 14px 18px !important;
+    border-radius: 12px !important;
+  }
+  .subtitle-sep {
+    font-size: 30px !important;
+    padding: 14px 18px !important;
+    border-radius: 14px !important;
+  }
+
+  /* Exportação - paisagem com fonte grande */
+  .ultra #capture {
+    max-width: 1123px;
+    width: 1123px;
+    margin: 0 auto;
+  }
+  .ultra .columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px !important;
+  }
+  .ultra .field {
+    padding: 14px !important;
+    border-radius: 14px !important;
+  }
+  .ultra .field label {
+    font-size: 29px !important;
+    line-height: 1.2 !important;
+  }
+  .ultra input, .ultra select, .ultra textarea {
+    font-size: 30px !important;
+    padding: 14px 18px !important;
+    border-radius: 12px !important;
+  }
+  .ultra .print-value {
+    font-size: 30px !important;
+    padding: 14px 18px !important;
+    border-radius: 12px !important;
+  }
+  .ultra .subtitle-sep {
+    font-size: 30px !important;
+    padding: 14px 18px !important;
+    border-radius: 14px !important;
+  }
+  .ultra h1 {
+    font-size: 46px !important;
+  }
+  .ultra .subtitle {
+    font-size: 30px !important;
+  }
+</style>
+
+
+<style>
+  /* Forçar modo paisagem (mais largo que alto) durante a exportação */
+  .ultra #capture {
+    width: 1600px !important;
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+  }
+  .ultra .columns {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+</style>
+
+
+<style>
+  /* ===== Azul claro do BB nos campos da coluna do meio ===== */
+  .col2 .field {
+    background: linear-gradient(180deg, #E6ECFF, #DDE8FF) !important;
+    border-color: #A5BDF7 !important;
+  }
+  .col2 .field label {
+    color: #0c2a66 !important;
+  }
+  .col2 input,
+  .col2 select,
+  .col2 textarea {
+    background-color: #FFFFFF !important;
+    color: #0c2a66 !important;
+    border: 1px solid #A5BDF7 !important;
+  }
+  .col2 .print-value {
+    background-color: #FFFFFF !important;
+    color: #0c2a66 !important;
+    border: 1px solid #A5BDF7 !important;
+  }
+</style>
+
+
+<style>
+  /* ===== Coluna 1: fundo amarelo claro (padrão BB) ===== */
+  .col1 .field {
+    background: linear-gradient(180deg, #FFFBEA, #FFF7CC) !important;
+    border-color: #FFDD66 !important;
+  }
+  .col1 .field label {
+    color: #0f274d !important;
+  }
+  .col1 input,
+  .col1 select,
+  .col1 textarea {
+    background-color: #FFFFFF !important;
+    color: #0f274d !important;
+    border: 1px solid #FFDD66 !important;
+  }
+  .col1 .print-value {
+    background-color: #FFFFFF !important;
+    color: #0f274d !important;
+    border: 1px solid #FFDD66 !important;
+  }
+
+  /* ===== Campos do topo: Prefixo e Agência ===== */
+  .topmeta .field {
+    background: linear-gradient(180deg, #F1F4FB, #E6ECFF) !important;
+    border-color: #B0C4FF !important;
+  }
+  .topmeta .field label {
+    color: #0c2a66 !important;
+  }
+  .topmeta input {
+    background-color: #FFFFFF !important;
+    color: #0c2a66 !important;
+    border: 1px solid #B0C4FF !important;
+  }
+</style>
+
 </head>
 <body>
 <div class="page">
@@ -68,92 +256,71 @@
         <button class="primary" id="savePng">Salvar em imagem (PNG)</button>
       </div>
     </div>
-
     <div class="topmeta">
-      <div class="field">
-        <label for="prefixo">Prefixo</label>
-        <input id="prefixo" type="text" placeholder="Ex.: 1234">
-        <div class="print-value" data-from="prefixo"></div>
-      </div>
-      <div class="field">
-        <label for="agencia">Agência</label>
-        <input id="agencia" type="text" placeholder="Ex.: 0001-9">
-        <div class="print-value" data-from="agencia"></div>
-      </div>
+      <div class="field"><label for="prefixo">Prefixo</label><input id="prefixo" type="text" placeholder="Ex.: 1234"><div class="print-value" data-from="prefixo"></div></div>
+      <div class="field"><label for="agencia">Agência</label><input id="agencia" type="text" placeholder="Ex.: 0001-9"><div class="print-value" data-from="agencia"></div></div>
     </div>
-
     <div class="columns">
       <div class="col col1">
-        <!-- Primeira coluna (até Rating) -->
-        <!-- Campos monetários e gerais da planilha -->
-        <!-- ... (campos da planilha vão aqui conforme extraídos, em inputs e textareas) ... -->
+        <div class="field"><label for="alcada">Alçada</label><input id="alcada" type="text" placeholder=""><div class="print-value" data-from="alcada"></div></div>
+        <div class="field"><label for="mci">MCI</label><input id="mci" type="text" placeholder=""><div class="print-value" data-from="mci"></div></div>
+        <div class="field"><label for="cliente">Cliente</label><input id="cliente" type="text" placeholder=""><div class="print-value" data-from="cliente"></div></div>
+        <div class="field"><label for="idade-do-cliente">Idade do Cliente</label><input id="idade-do-cliente" type="text" placeholder=""><div class="print-value" data-from="idade-do-cliente"></div></div>
+        <div class="field"><label for="cliente-desde">Cliente desde (Data)</label><input id="cliente-desde" type="date"><div class="print-value" data-from="cliente-desde"></div></div>
+        <div class="field"><label for="proposta">Proposta</label><input id="proposta" type="text" placeholder=""><div class="print-value" data-from="proposta"></div></div>
+        <div class="field"><label for="linha-de-credito">Linha de Crédito</label><input id="linha-de-credito" type="text" placeholder=""><div class="print-value" data-from="linha-de-credito"></div></div>
+        <div class="field"><label for="item-financiado">Item Financiado</label><input id="item-financiado" type="text" placeholder=""><div class="print-value" data-from="item-financiado"></div></div>
+        <div class="field"><label for="rating">Rating</label><input id="rating" type="text" placeholder=""><div class="print-value" data-from="rating"></div></div>
       </div>
-
       <div class="col col2">
-        <!-- Segunda coluna (Autorização Grão até Garantias) -->
-        <!-- ... -->
+        <div class="field"><label for="autorizacao-grao">Autorização Grão</label><textarea id="autorizacao-grao" placeholder=""></textarea><div class="print-value" data-from="autorizacao-grao"></div></div>
+        <div class="field"><label for="valor-operacao">Valor Operação (R$)</label><input id="valor-operacao" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="valor-operacao"></div></div>
+        <div class="field"><label for="seguros-quais">Seguros (Quais?)</label><input id="seguros-quais" type="text" placeholder=""><div class="print-value" data-from="seguros-quais"></div></div>
+        <div class="field"><label for="rs-contratado-na-operacao">RS contratado na operação (R$)</label><input id="rs-contratado-na-operacao" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="rs-contratado-na-operacao"></div></div>
+        <div class="field"><label for="limite-de-credito-vigencia-e-risco">Limite de Crédito (Vigência e Risco)</label><input id="limite-de-credito-vigencia-e-risco" type="text" placeholder=""><div class="print-value" data-from="limite-de-credito-vigencia-e-risco"></div></div>
+        <div class="field"><label for="condicionante-do-lc-qual">Condicionante do LC (Qual?)</label><input id="condicionante-do-lc-qual" type="text" placeholder=""><div class="print-value" data-from="condicionante-do-lc-qual"></div></div>
+        <div class="field"><label for="receita-bruta-clientes-03-20-41-selecionar-lc-f12-6-f9">Receita bruta - Clientes 03-20-41 Selecionar LC, F12-6-F9 (R$)</label><input id="receita-bruta-clientes-03-20-41-selecionar-lc-f12-6-f9" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="receita-bruta-clientes-03-20-41-selecionar-lc-f12-6-f9"></div></div>
+        <div class="field"><label for="receita-bruta-total-obtida">Receita Bruta Total Obtida (R$)</label><input id="receita-bruta-total-obtida" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="receita-bruta-total-obtida"></div></div>
+        <div class="field"><label for="receita-bruta-total-prevista">Receita Bruta Total Prevista (R$)</label><input id="receita-bruta-total-prevista" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="receita-bruta-total-prevista"></div></div>
+        <div class="field"><label for="resultado-operacional-agropecuario-obtido">Resultado Operacional Agropecuário Obtido (R$)</label><input id="resultado-operacional-agropecuario-obtido" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="resultado-operacional-agropecuario-obtido"></div></div>
+        <div class="field"><label for="resultado-operacional-agropecuario-previsto">Resultado Operacional Agropecuário Previsto (R$)</label><input id="resultado-operacional-agropecuario-previsto" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="resultado-operacional-agropecuario-previsto"></div></div>
+        <div class="field"><label for="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho">Pecuária: Quantidade de animais compatível com área do cliente? (Se não, justifique o apascentamento aqui e no despacho)</label><select id="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho"><option value="" selected disabled>Selecione</option><option>Sim</option><option>Não</option><option>Não se aplica</option></select><div class="print-value" data-from="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho"></div><label for="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-just">Justifique</label><textarea id="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-just" placeholder="Descreva a justificativa"></textarea><div class="print-value" data-from="pecuaria-quantidade-de-animais-compativel-com-area-do-cliente-se-nao-justifique-o-apascentamento-aqui-e-no-despacho-just"></div></div>
+        <div class="field"><label for="garantias">Garantias</label><input id="garantias" type="text" placeholder=""><div class="print-value" data-from="garantias"></div></div>
       </div>
-
       <div class="col col3">
-        <!-- Terceira coluna (Share BB até Rende Fácil) -->
-        <!-- ... -->
+        <div class="field"><label for="share-bb-preenchimento-automatico">Share BB ( preenchimento automático) (%) = Endiv. BB ÷ Endiv. SFN</label><input id="share-bb-preenchimento-automatico" class="percent" type="text" readonly placeholder="0,00%"><div class="print-value" data-from="share-bb-preenchimento-automatico"></div><div class="hint">Calculado automaticamente</div></div>
+        <div class="field"><label for="recursos-liquidos">Recursos liquidos (R$)</label><input id="recursos-liquidos" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="recursos-liquidos"></div></div>
+        <div class="field"><label for="patrimonio-total">Patrimônio Total (R$)</label><input id="patrimonio-total" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="patrimonio-total"></div></div>
+        <div class="field"><label for="endividamento-no-sfn">Endividamento no SFN (R$)</label><input id="endividamento-no-sfn" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="endividamento-no-sfn"></div></div>
+        <div class="field"><label for="endividamento-no-bb">Endividamento no BB (R$)</label><input id="endividamento-no-bb" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="endividamento-no-bb"></div></div>
+        <div class="field"><label for="inad-agro-agencia-rel-5398">Inad Agro Agência (rel 5398) (R$)</label><input id="inad-agro-agencia-rel-5398" class="money" type="text" inputmode="decimal" placeholder="0,00"><div class="print-value" data-from="inad-agro-agencia-rel-5398"></div></div>
+        <div class="field"><label for="proposta-customizada">Proposta Customizada</label><select id="proposta-customizada"><option value="" selected disabled>Selecione</option><option>Sim</option><option>Não</option><option>Não se aplica</option></select><div class="print-value" data-from="proposta-customizada"></div></div>
+        <div class="field"><label for="de-operacoes-do-cliente-com-garantia-hipotecaria">% de operações do cliente Com garantia Hipotecária</label><input id="de-operacoes-do-cliente-com-garantia-hipotecaria" type="text" placeholder=""><div class="print-value" data-from="de-operacoes-do-cliente-com-garantia-hipotecaria"></div></div>
+        <div class="field"><label for="rende-facil">Rende Fácil</label><select id="rende-facil"><option value="" selected disabled>Selecione</option><option>Sim</option><option>Não</option><option>Não se aplica</option></select><div class="print-value" data-from="rende-facil"></div></div>
       </div>
     </div>
-
-    <div class="subtitle-sep">Legenda: Campos espelhados no PNG; 3 colunas (A4 paisagem, HD); Prefixo & Agência no topo; Share BB automático.</div>
+    <div class="subtitle-sep">Legenda: campos da planilha, 3 colunas na exportação (A4 paisagem, HD), Prefixo & Agência no topo, Share BB automático.</div>
   </div>
-
-  <footer style="margin-top:8px;text-align:center;color:#6b7280;font-size:12px;">Exporta em 3 colunas fixas conforme faixas solicitadas.</footer>
+  <footer style="margin-top:8px;text-align:center;color:#6b7280;font-size:12px;">Exporta em 3 colunas fixas conforme as âncoras da planilha.</footer>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
 <script>
   const fmtBRL = new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL', maximumFractionDigits:2 });
   const fmtPct = new Intl.NumberFormat('pt-BR', { style:'percent', minimumFractionDigits:2, maximumFractionDigits:2 });
-
-  function toNumberBR(v){ if(!v) return 0; v=String(v).replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3})/g,''); v=v.replace(',', '.'); const n=parseFloat(v); return isNaN(n)?0:n;}
-  function setPrintMirror(id, text){ const span=document.querySelector(`.print-value[data-from="${id}"]`); if(span) span.textContent=text||'';}
-
-  function syncAllToPrint(){
-    document.querySelectorAll('input.money').forEach(el=>{let raw=el.dataset.raw; if(!raw) raw=toNumberBR(el.value); el.dataset.raw=raw; setPrintMirror(el.id,fmtBRL.format(parseFloat(raw||0)));});
+  function toNumberBR(v){ if(!v) return 0; v=String(v).replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3})/g,''); v=v.replace(',', '.'); const n=parseFloat(v); return isNaN(n)?0:n; }
+  function setPrintMirror(id, text){ const span=document.querySelector(`.print-value[data-from="${id}"]`); if(span) span.textContent=text||''; }
+  function syncAllToPrint(){ document.querySelectorAll('input.money').forEach(el=>{ let raw=el.dataset.raw; if(!raw) raw=toNumberBR(el.value); el.dataset.raw=raw; setPrintMirror(el.id,fmtBRL.format(parseFloat(raw||0))); });
     document.querySelectorAll('input.percent[readonly]').forEach(el=>setPrintMirror(el.id, el.value||"0,00%"));
-    document.querySelectorAll('input[type="date"]').forEach(el=>{if(el.value){const d=new Date(el.value);setPrintMirror(el.id,d.toLocaleDateString('pt-BR',{timeZone:'UTC'}));}});
+    document.querySelectorAll('input[type="date"]').forEach(el=>{ if(el.value){ const d=new Date(el.value); setPrintMirror(el.id,d.toLocaleDateString('pt-BR', {timeZone:'UTC'})); } });
     document.querySelectorAll('textarea,input[type="text"]:not(.money):not(.percent)').forEach(el=>setPrintMirror(el.id, el.value||''));
     document.querySelectorAll('select').forEach(el=>setPrintMirror(el.id, el.value||''));
-    updateShare();
-  }
-
-  function updateShare(){
-    const sfnEl=document.getElementById('endividamento-no-sfn');
-    const bbEl=document.getElementById('endividamento-no-bb');
-    const shareEl=document.getElementById('share-bb');
-    if(!sfnEl||!bbEl||!shareEl) return;
-    const sfn=parseFloat(sfnEl.dataset.raw||toNumberBR(sfnEl.value)||0);
-    const bb=parseFloat(bbEl.dataset.raw||toNumberBR(bbEl.value)||0);
-    const share=(sfn>0)?(bb/sfn):0;
-    const text=fmtPct.format(share);
-    shareEl.value=text;
-    setPrintMirror('share-bb', text);
-  }
-
-  document.getElementById('togglePrint').addEventListener('click',()=>{
-    document.body.classList.toggle('print-mode');
-  });
-
-  document.getElementById('savePng').addEventListener('click',async()=>{
-    const wasPrint=document.body.classList.contains('print-mode');
-    document.body.classList.add('ultra');
-    syncAllToPrint();
-    if(!wasPrint) document.body.classList.add('print-mode');
-    const node=document.querySelector('#capture');
-    const canvas=await html2canvas(node,{backgroundColor:'#ffffff',scale:3});
-    const link=document.createElement('a');
-    link.download='super-barreiras-3colunas-hd.png';
-    link.href=canvas.toDataURL('image/png');
-    link.click();
-    if(!wasPrint) document.body.classList.remove('print-mode');
-    document.body.classList.remove('ultra');
-  });
+    updateShare(); }
+  function updateShare(){ const sfnEl=document.getElementById('endividamento-no-sfn'); const bbEl=document.getElementById('endividamento-no-bb'); const shareEl=document.getElementById('share-bb-preenchimento-automatico');
+    if(!sfnEl||!bbEl||!shareEl) return; const sfn=parseFloat(sfnEl.dataset.raw||toNumberBR(sfnEl.value)||0); const bb=parseFloat(bbEl.dataset.raw||toNumberBR(bbEl.value)||0);
+    const share=(sfn>0)?(bb/sfn):0; const text=fmtPct.format(share); shareEl.value=text; setPrintMirror('share-bb-preenchimento-automatico', text); }
+  document.getElementById('togglePrint').addEventListener('click',()=>{ document.body.classList.toggle('print-mode'); });
+  document.getElementById('savePng').addEventListener('click', async()=>{ const wasPrint=document.body.classList.contains('print-mode'); document.body.classList.add('ultra'); syncAllToPrint(); if(!wasPrint) document.body.classList.add('print-mode'); const node=document.querySelector('#capture'); const canvas=await html2canvas(node, {backgroundColor:'#ffffff', scale:3}); const link=document.createElement('a'); link.download='super-barreiras-3colunas-hd.png'; link.href=canvas.toDataURL('image/png'); link.click(); if(!wasPrint) document.body.classList.remove('print-mode'); document.body.classList.remove('ultra'); });
+  document.querySelectorAll('input.money').forEach(el=>{ el.addEventListener('input', (e)=>{ const raw=toNumberBR(e.target.value); e.target.dataset.raw=raw; setPrintMirror(el.id, fmtBRL.format(raw)); updateShare(); }); });
 </script>
 </body>
 </html>
