@@ -47,16 +47,16 @@
 
 <style>
   /* ====== Aumento geral de fonte em ~60% ====== */
-  h1{ font-size:29px !important; }                    /* 18 -> ~29 */
-  .subtitle{ font-size:19px !important; }             /* 12 -> ~19 */
+  h1{ font-size:29px !important; } /* 18 -> ~29 */
+  .subtitle{ font-size:19px !important; } /* 12 -> ~19 */
   .actions button, .actions .ghost{ font-size:19px !important; padding:10px 12px !important; border-radius:10px !important; }
 
-  .field label{ font-size:18px !important; }          /* 11 -> ~18 */
+  .field label{ font-size:18px !important; } /* 11 -> ~18 */
   input[type="text"].money,
   input[type="text"].percent,
   select, textarea, input[type="date"], input[type="text"]{
-    font-size:19px !important;                        /* 12 -> ~19 */
-    padding:10px 12px !important;                     /* + espaço acompanha a fonte */
+    font-size:19px !important; /* 12 -> ~19 */
+    padding:10px 12px !important; /* + espaço acompanha a fonte */
     border-radius:10px !important;
   }
   .print-value{ font-size:19px !important; padding:10px 12px !important; border-radius:10px !important; }
@@ -75,7 +75,6 @@
   .ultra .subtitle{ font-size:19px !important; margin:0 !important; }
   .ultra .titlecard{ padding:10px 12px !important; border-radius:12px !important; }
 </style>
-
 
 <style>
   /* ===== Ajustes adicionais ===== */
@@ -142,7 +141,7 @@
     font-size: 29px !important;
     line-height: 1.2 !important;
   }
-  .ultra input, .ultra select, .ultra textarea {
+  .ultra input, .ultra select, .ulra textarea {
     font-size: 30px !important;
     padding: 14px 18px !important;
     border-radius: 12px !important;
@@ -165,21 +164,27 @@
   }
 </style>
 
-
 <style>
   /* Forçar modo paisagem (mais largo que alto) durante a exportação */
   .ultra #capture {
-    width: 1600px !important;
-    max-width: 1600px !important;
+    width: 1400px !important; /* ↓ para reduzir o tamanho do arquivo mantendo boa nitidez */
+    max-width: 1400px !important;
     margin: 0 auto !important;
   }
   .ultra .columns {
     display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 16px !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important; /* Mantém 3 trilhas */
+    gap: 14px !important;
+  }
+  /* ▼ Para obter 4 colunas visuais na exportação, dividimos a coluna do meio em 2 subcolunas */
+  .ultra .col2{
+    column-count: 2; /* cria 2 subcolunas dentro da coluna 2 */
+    column-gap: 14px;
+  }
+  .ultra .col2 .field{
+    break-inside: avoid; /* evita quebra feia de cartões */
   }
 </style>
-
 
 <style>
   /* ===== Azul claro do BB nos campos da coluna do meio ===== */
@@ -203,7 +208,6 @@
     border: 1px solid #A5BDF7 !important;
   }
 </style>
-
 
 <style>
   /* ===== Coluna 1: fundo amarelo claro (padrão BB) ===== */
@@ -299,7 +303,7 @@
         <div class="field"><label for="rende-facil">Rende Fácil</label><select id="rende-facil"><option value="" selected disabled>Selecione</option><option>Sim</option><option>Não</option><option>Não se aplica</option></select><div class="print-value" data-from="rende-facil"></div></div>
       </div>
     </div>
-    <div class="subtitle-sep">Legenda: campos da planilha, 3 colunas na exportação (A4 paisagem, HD), Prefixo & Agência no topo, Share BB automático.</div>
+    <!-- Legenda removida conforme solicitado -->
   </div>
   <footer style="margin-top:8px;text-align:center;color:#6b7280;font-size:12px;">Exporta em 3 colunas fixas conforme as âncoras da planilha.</footer>
 </div>
@@ -309,18 +313,54 @@
   const fmtPct = new Intl.NumberFormat('pt-BR', { style:'percent', minimumFractionDigits:2, maximumFractionDigits:2 });
   function toNumberBR(v){ if(!v) return 0; v=String(v).replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3})/g,''); v=v.replace(',', '.'); const n=parseFloat(v); return isNaN(n)?0:n; }
   function setPrintMirror(id, text){ const span=document.querySelector(`.print-value[data-from="${id}"]`); if(span) span.textContent=text||''; }
-  function syncAllToPrint(){ document.querySelectorAll('input.money').forEach(el=>{ let raw=el.dataset.raw; if(!raw) raw=toNumberBR(el.value); el.dataset.raw=raw; setPrintMirror(el.id,fmtBRL.format(parseFloat(raw||0))); });
+  function syncAllToPrint(){ 
+    document.querySelectorAll('input.money').forEach(el=>{ let raw=el.dataset.raw; if(!raw) raw=toNumberBR(el.value); el.dataset.raw=raw; setPrintMirror(el.id,fmtBRL.format(parseFloat(raw||0))); });
     document.querySelectorAll('input.percent[readonly]').forEach(el=>setPrintMirror(el.id, el.value||"0,00%"));
     document.querySelectorAll('input[type="date"]').forEach(el=>{ if(el.value){ const d=new Date(el.value); setPrintMirror(el.id,d.toLocaleDateString('pt-BR', {timeZone:'UTC'})); } });
     document.querySelectorAll('textarea,input[type="text"]:not(.money):not(.percent)').forEach(el=>setPrintMirror(el.id, el.value||''));
     document.querySelectorAll('select').forEach(el=>setPrintMirror(el.id, el.value||''));
-    updateShare(); }
-  function updateShare(){ const sfnEl=document.getElementById('endividamento-no-sfn'); const bbEl=document.getElementById('endividamento-no-bb'); const shareEl=document.getElementById('share-bb-preenchimento-automatico');
-    if(!sfnEl||!bbEl||!shareEl) return; const sfn=parseFloat(sfnEl.dataset.raw||toNumberBR(sfnEl.value)||0); const bb=parseFloat(bbEl.dataset.raw||toNumberBR(bbEl.value)||0);
-    const share=(sfn>0)?(bb/sfn):0; const text=fmtPct.format(share); shareEl.value=text; setPrintMirror('share-bb-preenchimento-automatico', text); }
+    updateShare(); 
+  }
+  function updateShare(){ 
+    const sfnEl=document.getElementById('endividamento-no-sfn'); 
+    const bbEl=document.getElementById('endividamento-no-bb'); 
+    const shareEl=document.getElementById('share-bb-preenchimento-automatico');
+    if(!sfnEl||!bbEl||!shareEl) return; 
+    const sfn=parseFloat(sfnEl.dataset.raw||toNumberBR(sfnEl.value)||0); 
+    const bb=parseFloat(bbEl.dataset.raw||toNumberBR(bbEl.value)||0);
+    const share=(sfn>0)?(bb/sfn):0; 
+    const text=fmtPct.format(share); 
+    shareEl.value=text; 
+    setPrintMirror('share-bb-preenchimento-automatico', text); 
+  }
   document.getElementById('togglePrint').addEventListener('click',()=>{ document.body.classList.toggle('print-mode'); });
-  document.getElementById('savePng').addEventListener('click', async()=>{ const wasPrint=document.body.classList.contains('print-mode'); document.body.classList.add('ultra'); syncAllToPrint(); if(!wasPrint) document.body.classList.add('print-mode'); const node=document.querySelector('#capture'); const canvas=await html2canvas(node, {backgroundColor:'#ffffff', scale:3}); const link=document.createElement('a'); link.download='super-barreiras-3colunas-hd.png'; link.href=canvas.toDataURL('image/png'); link.click(); if(!wasPrint) document.body.classList.remove('print-mode'); document.body.classList.remove('ultra'); });
-  document.querySelectorAll('input.money').forEach(el=>{ el.addEventListener('input', (e)=>{ const raw=toNumberBR(e.target.value); e.target.dataset.raw=raw; setPrintMirror(el.id, fmtBRL.format(raw)); updateShare(); }); });
+
+  document.getElementById('savePng').addEventListener('click', async()=>{
+    const wasPrint=document.body.classList.contains('print-mode'); 
+    document.body.classList.add('ultra'); // ativa layout de exportação
+    syncAllToPrint(); 
+    if(!wasPrint) document.body.classList.add('print-mode');
+
+    const node=document.querySelector('#capture'); 
+    /* ↓ scale reduzido para diminuir tamanho do arquivo mantendo boa qualidade */
+    const canvas=await html2canvas(node, {backgroundColor:'#ffffff', scale:2});
+    const link=document.createElement('a'); 
+    link.download='super-barreiras-4colunas-hd.png'; 
+    link.href=canvas.toDataURL('image/png'); 
+    link.click(); 
+
+    if(!wasPrint) document.body.classList.remove('print-mode'); 
+    document.body.classList.remove('ultra'); 
+  });
+
+  document.querySelectorAll('input.money').forEach(el=>{
+    el.addEventListener('input', (e)=>{
+      const raw=toNumberBR(e.target.value); 
+      e.target.dataset.raw=raw; 
+      setPrintMirror(el.id, fmtBRL.format(raw)); 
+      updateShare(); 
+    });
+  });
 </script>
 </body>
 </html>
